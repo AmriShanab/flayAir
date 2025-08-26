@@ -33,13 +33,13 @@ class ShiftController extends Controller
         return view('shifts.index', compact('workers', 'shifts', 'date', 'flights'));
     }
 
-    public function flightIndex()
-    {
-        $date = Carbon::now();
-        $flights = Flight::whereDate('date', $date)->get();
+    // public function flightIndex()
+    // {
+    //     $date = Carbon::now();
+    //     $flights = Flight::whereDate('date', $date)->get();
 
-        return view('admin.shifts.flight_shift', compact('flights'));
-    }
+    //     return view('admin.shifts.flight_shift', compact('flights'));
+    // }
 
     public function welcome()
     {
