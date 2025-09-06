@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-  
+
 
     /**
      * The attributes that are mass assignable.
@@ -51,5 +51,15 @@ class User extends Authenticatable
     public function shifts()
     {
         return $this->hasMany(Shift::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'superadmin';
     }
 }

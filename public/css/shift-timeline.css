@@ -1,12 +1,17 @@
 /* Timeline styling */
 .timeline-header {
     display: flex;
-    width: 3840px; /* 96 slots × 40px */
+    width: 100%;
     background: white;
     border-bottom: 1px solid #e5e7eb;
     position: sticky;
     top: 0;
     z-index: 20;
+}
+
+.timeline-slot-container {
+    display: flex;
+    width: 3840px; /* 96 slots × 40px */
 }
 
 .timeline-slot {
@@ -38,6 +43,7 @@
     height: 80px;
     border-bottom: 1px solid #e5e7eb;
     position: relative;
+    width: 100%;
 }
 
 .worker-name-cell {
@@ -51,7 +57,7 @@
     padding: 0 16px;
     display: flex;
     align-items: center;
-    height: 80极速赛车开奖结果查询官网px;
+    height: 80px;
     box-sizing: border-box;
 }
 
@@ -151,16 +157,14 @@
 }
 
 .timeline-container::-webkit-scrollbar-track {
-   background: #f1f5f9;
-
+    background: #f1f5f9;
     border-radius: 6px;
 }
 
 .timeline-container::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 6px;
-   border: 2px solid #f1f5f9;
-
+    border: 2px solid #f1f5f9;
 }
 
 .timeline-container::-webkit-scrollbar-thumb:hover {
@@ -177,11 +181,12 @@
     margin-top: 2rem;
     border-top: 2px solid #e5e7eb;
     padding-top: 1rem;
+    width: 100%;
 }
 
 .flight-timeline-header {
     display: flex;
-    width: 3840px;
+    width: 100%;
     background: white;
     border-bottom: 1px solid #e5e7eb;
     position: sticky;
@@ -206,12 +211,18 @@
     color: #374151;
 }
 
+.flight-timeline-slot-container {
+    display: flex;
+    width: 3840px; /* Must match the width of the main timeline */
+}
+
 .flight-timeline {
     position: relative;
-    width: 3840px;
+    width: 3840px; /* Must match the width of the main timeline */
     min-height: 60px;
     background: #f9fafb;
     border-bottom: 1px solid #e5e7eb;
+    margin-left: 190px;
 }
 
 .flight-item {
@@ -285,4 +296,12 @@
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
     border-right: 6px solid white;
+}
+
+/* Ensure all timeline components have the same width */
+.timeline-slot-container,
+.worker-timeline,
+.flight-timeline-slot-container,
+.flight-timeline {
+    width: 3840px; /* 96 slots × 40px */
 }

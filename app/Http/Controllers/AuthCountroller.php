@@ -20,12 +20,14 @@ class AuthCountroller extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
+            'role' => 'nullable|string'
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role ?? 'user', // default role
         ]);
 
         Auth::login($user);
@@ -39,21 +41,31 @@ class AuthCountroller extends Controller
     }
 
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-        
-        if(Auth::attempt($credentials)){
-            $request->session()->regenerate();
-            return redirect()->route('dashboard');
-        }
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+    
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
 
-        return back()->withErrors([
-            'email' => 'Invalid Credentials'
-        ]);
+        // Redirect based on role
+        $role = Auth::user()->role; // Get logged-in user's role
+
+        if ($role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($role === 'super_admin') {
+            return redirect()->route('super.dashboard');
+        } else {
+            return redirect()->route('dashboard'); // regular user
+        }
     }
+
+    return back()->withErrors([
+        'email' => 'Invalid Credentials'
+    ]);
+}
 
     public function logout(Request $request)
     {

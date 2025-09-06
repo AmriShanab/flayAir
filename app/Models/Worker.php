@@ -10,15 +10,14 @@ class Worker extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+      protected $fillable = [
         'first_name',
         'last_name',
         'email',
         'phone',
         'position',
-        'status'
+        'status',
     ];
-
     protected $casts = [
         'status' => 'string'
     ];
