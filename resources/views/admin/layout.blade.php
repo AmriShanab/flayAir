@@ -577,6 +577,14 @@
                         <span>View Shift Timeline</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}">
+                        <i class="bi bi-people"></i>
+                        <span>View Users</span>
+
+                    </a>
+                </li>
                 {{-- <li class="nav-item">
                     <a href="{{ route('shifts.index') }}" class="nav-link {{ request()->routeIs('shifts.index') ? 'active' : '' }}">
                         <i class="bi bi-calendar-week"></i>

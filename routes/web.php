@@ -29,10 +29,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/shifts', [ShiftController::class, 'index'])->name('shifts.index');
     Route::get('/flights/data', [ShiftController::class, 'getFlightsForDate'])->name('flights.data');
     Route::get('/shifts/data', [ShiftController::class, 'getShiftsForDate'])->name('flights.data');
+    Route::get('/settings', [ShiftController::class, 'viewSettings'])->name('settings.view');
 });
 
 // Admin Routes
-Route::middleware(['auth', RoleMiddleware::class.':admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', RoleMiddleware::class . ':admin'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
 
     // Workers CRUD
@@ -43,10 +44,21 @@ Route::middleware(['auth', RoleMiddleware::class.':admin'])->prefix('admin')->gr
     Route::get('/add/flights', [AdminController::class, 'addFlights'])->name('admin.add.flights');
     Route::post('/add/store/shifts', [AdminController::class, 'storeShifts'])->name('admin.store.shifts');
     Route::post('/add/store/flights', [AdminController::class, 'storeFlights'])->name('admin.store.flights');
+
+    // User Management
+    Route::post('/admin/unblock/{id}', [AdminController::class, 'unblockUser'])->name('admin.unblock');
+    Route::get('/users', [AdminController::class, 'listUsers'])->name('admin.users');
+
+    // Store Shifts From Shifts Page
+    Route::post('/shifts/store', [AdminController::class, 'storeShiftsFromShiftsPage'])->name('admin.shifts.store');
+
+    // Assign Flight to Worker
+    Route::post('/assign-flight', [ShiftController::class, 'assignFlight'])->name('assign.flight');
+
 });
 
 
 // Super Admin Routes
-Route::middleware(['auth', RoleMiddleware::class.':super_admin'])->prefix('super-admin')->group(function () {
+Route::middleware(['auth', RoleMiddleware::class . ':super_admin'])->prefix('super-admin')->group(function () {
     Route::get('/', [SuperAdminController::class, 'index'])->name('super.dashboard');
 });

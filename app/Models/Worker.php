@@ -10,22 +10,31 @@ class Worker extends Model
 {
     use HasFactory;
 
-      protected $fillable = [
+    protected $fillable = [
         'first_name',
         'last_name',
         'email',
         'phone',
         'position',
         'status',
+        'online',
     ];
+
     protected $casts = [
-        'status' => 'string'
+        'online' => 'boolean',
     ];
 
     public function shifts(): HasMany
     {
         return $this->hasMany(Shift::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+
 
     public function getFullNameAttribute(): string
     {

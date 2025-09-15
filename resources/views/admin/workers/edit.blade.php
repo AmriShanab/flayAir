@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-header">
-            {{-- <h1 class="page-title">Edit Worker</h1> --}}
+            {{-- <h1 class="page-title">Edit Worker</h1>a --}}
             <a href="{{ route('workers.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Back to Workers
             </a>

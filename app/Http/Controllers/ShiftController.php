@@ -23,16 +23,66 @@ class ShiftController extends Controller
             ->orderBy('first_name')
             ->get();
 
-        $shifts = Shift::with('worker')
+        $shifts = Shift::with(['worker', 'flight'])
             ->forDate($date)
             ->orderBy('start_time')
             ->get();
 
-        $flights = Flight::whereDate('date', $date)->get();
+        $flights = Flight::where('status', 'scheduled')->get();
 
-        return view('shifts.index', compact('workers', 'shifts', 'date', 'flights'));
+        return view('shifts.index', [
+            'workers' => $workers,
+            'shifts'  => $shifts,
+            'date'    => $date,
+            'flights' => $flights,
+            // 👇 Pass JSON version of shifts for JS
+            'shiftsJson' => $shifts->toJson(),
+        ]);
     }
 
+
+    public function assignFlight(Request $request)
+    {
+        $validated = $request->validate([
+            'flight_id' => 'required|exists:flights,id',
+            'worker_id' => 'required|exists:workers,id',
+            'start_time' => 'required'
+        ]);
+
+        try {
+            // Get the flight to calculate end time
+            $flight = Flight::find($validated['flight_id']);
+
+            // Parse the start time (format: HH:MM:SS)
+            $startTime = Carbon::createFromFormat('H:i:s', $validated['start_time']);
+
+            // Use today's date with the time
+            $startDateTime = Carbon::today()
+                ->setHour($startTime->hour)
+                ->setMinute($startTime->minute)
+                ->setSecond($startTime->second);
+
+            // Calculate end time based on flight duration
+            $endDateTime = $startDateTime->copy()->addMinutes($flight->duration + 30);
+
+
+            // Create a new shift for the worker with this flight
+            $shift = new Shift();
+            $shift->worker_id = $validated['worker_id'];
+            $shift->flight_id = $validated['flight_id'];
+            $shift->start_time = $startDateTime;
+            $shift->end_time = $endDateTime;
+            $shift->save();
+
+            // Update flight status to 'assigned'
+            $flight->status = 'assigned';
+            $flight->save();
+
+            return response()->json(['success' => true, 'message' => 'Flight assigned successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
     // public function flightIndex()
     // {
     //     $date = Carbon::now();
@@ -46,33 +96,43 @@ class ShiftController extends Controller
         return view('welcome');
     }
 
-    public function getShiftsForDate(Request $request): JsonResponse
-    {
-        $request->validate([
-            'date' => 'required|date'
-        ]);
+   public function getShiftsForDate(Request $request): JsonResponse
+{
+    $request->validate([
+        'date' => 'required|date'
+    ]);
 
-        $date = Carbon::parse($request->date);
+    $date = Carbon::parse($request->date);
 
-        $shifts = Shift::with('worker')
-            ->whereDate('start_time', $date)
-            ->orderBy('start_time')
-            ->get()
-            ->map(function ($shift) {
-                return [
-                    'id' => $shift->id,
-                    'worker_id' => $shift->worker_id, // Make sure this is included
-                    'worker_name' => $shift->worker->full_name,
-                    'start_time' => $shift->start_time->format('H:i'),
-                    'end_time' => $shift->end_time->format('H:i'),
-                    'shift_type' => $shift->shift_type,
-                    'notes' => $shift->notes, // Include notes if needed
-                    'color' => $this->getShiftColor($shift->shift_type)
-                ];
-            });
+    $shifts = Shift::with(['worker', 'flight']) // <-- load flight relation
+        ->whereDate('start_time', $date)
+        ->orderBy('start_time')
+        ->get()
+        ->map(function ($shift) {
+            return [
+                'id' => $shift->id,
+                'worker_id' => $shift->worker_id,
+                'worker_name' => $shift->worker->full_name,
+                'start_time' => $shift->start_time->format('H:i'),
+                'end_time' => $shift->end_time->format('H:i'),
+                'shift_type' => $shift->shift_type,
+                'notes' => $shift->notes,
+                'color' => $this->getShiftColor($shift->shift_type),
+                'flight_id' => $shift->flight_id,
+                'flight' => $shift->flight ? [
+                    'id' => $shift->flight->id,
+                    'flight_number' => $shift->flight->flight_number,
+                    'status' => $shift->flight->status,
+                    'type' => $shift->flight->type, // arrival/departure if needed
+                    'origin' => $shift->flight->origin ?? null,
+                    'destination' => $shift->flight->destination ?? null,
+                ] : null,
+            ];
+        });
 
-        return response()->json($shifts);
-    }
+    return response()->json($shifts);
+}
+
 
     public function store(Request $request): JsonResponse
     {
@@ -174,5 +234,10 @@ class ShiftController extends Controller
             });
 
         return response()->json($flights);
+    }
+
+    public function viewSettings()
+    {
+        return view('shifts.settings');
     }
 }

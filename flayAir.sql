@@ -7,7 +7,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-CREATE DATABASE IF NOT EXISTS `shift_scheduler` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `shift_scheduler` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `shift_scheduler`;
 
 CREATE TABLE IF NOT EXISTS `cache` (
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `shifts` (
   KEY `idx_end_time` (`end_time`),
   KEY `idx_worker_date` (`worker_id`,`start_time`),
   CONSTRAINT `shifts_ibfk_1` FOREIGN KEY (`worker_id`) REFERENCES `workers` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `shifts` (`id`, `worker_id`, `start_time`, `end_time`, `shift_type`, `status`, `notes`, `created_at`, `updated_at`) VALUES
 	(1, 1, '2024-08-20 08:00:00', '2024-08-20 09:00:00', 'morning', 'scheduled', NULL, '2025-08-20 08:02:31', '2025-08-20 08:10:15'),
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `workers` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `workers` (`id`, `first_name`, `last_name`, `email`, `phone`, `position`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 'Emma', 'Johnson', 'emma@example.com', '555-0101', 'Manager', 'active', '2025-08-20 08:02:31', '2025-08-20 08:02:31'),

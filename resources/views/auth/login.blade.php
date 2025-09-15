@@ -264,21 +264,27 @@
             
             <h2>Login to Your Account</h2>
             
-            <div class="message-container">
-                <!-- Success Message (hidden by default) -->
-                <div class="alert alert-success" id="success-message">
-                    <i class="fas fa-check-circle"></i> Your password has been successfully reset!
-                </div>
-                
-                <!-- Error Messages (hidden by default) -->
-                <div class="alert alert-error" id="error-message">
-                    <i class="fas fa-exclamation-circle"></i> 
-                    <ul>
-                        <li>Invalid credentials provided</li>
-                        <li>Account is temporarily locked</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="message-container">
+    {{-- Success message --}}
+    @if(session('success'))
+        <div class="alert alert-success visible">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- Error messages --}}
+    @if($errors->any())
+        <div class="alert alert-error visible">
+            <i class="fas fa-exclamation-circle"></i>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+</div>
+
             
             <form action="{{ route('login.post') }}" method="POST">
                 @csrf

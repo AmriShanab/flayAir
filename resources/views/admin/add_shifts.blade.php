@@ -28,9 +28,9 @@
                     @csrf
 
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Worker <span class="text-danger">*</span></label>
+                        <label class="form-label">Staffs <span class="text-danger">*</span></label>
                         <select name="worker_id" class="form-select @error('worker_id') is-invalid @enderror" required>
-                            <option value="">Select Worker</option>
+                            <option value="">Select Staffs</option>
                             @foreach($workers as $worker)
                                 <option value="{{ $worker->id }}" {{ old('worker_id') == $worker->id ? 'selected' : '' }}>
                                     {{ $worker->first_name }} {{ $worker->last_name }}
@@ -42,7 +42,7 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    {{-- <div class="col-md-6 mb-3">
                         <label class="form-label">Shift Type <span class="text-danger">*</span></label>
                         <select name="shift_type" class="form-select @error('shift_type') is-invalid @enderror" required>
                             <option value="">Select Shift Type</option>
@@ -54,7 +54,7 @@
                         @error('shift_type')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Start Time <span class="text-danger">*</span></label>
@@ -74,7 +74,7 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    {{-- <div class="col-md-6 mb-3">
                         <label class="form-label">Status <span class="text-danger">*</span></label>
                         <select name="status" class="form-select @error('status') is-invalid @enderror" required>
                             <option value="">Select Status</option>
@@ -86,8 +86,21 @@
                         @error('status')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div> --}}
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Select Flight</label>
+                        <select name="flight_id" class="form-control @error('flight_id') is-invalid @enderror">
+                            <option value="">-- Select Flight --</option>
+                            @foreach($flights as $flight)
+                              <option value="{{ $flight->id }}" {{ old('flight_id') == $flight->id ? 'selected' : '' }}>
+                                        {{ $flight->flight_number }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('flight_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-
                     <div class="col-12 mb-3">
                         <label class="form-label">Notes</label>
                         <textarea name="notes" rows="3" class="form-control @error('notes') is-invalid @enderror">{{ old('notes') }}</textarea>
@@ -95,6 +108,9 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                  
+
 
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">

@@ -41,34 +41,69 @@ class AuthCountroller extends Controller
     }
 
     public function login(Request $request)
-{
-    $credentials = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
-    
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        // Redirect based on role
-        $role = Auth::user()->role; // Get logged-in user's role
+        $user = User::where('email', $request->email)->first();
 
-        if ($role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } elseif ($role === 'super_admin') {
-            return redirect()->route('super.dashboard');
-        } else {
-            return redirect()->route('dashboard'); // regular user
+        if ($user && $user->is_locked) {
+            return back()->withErrors([
+                'email' => 'Your account is blocked. Please contact admin.'
+            ]);
         }
-    }
 
-    return back()->withErrors([
-        'email' => 'Invalid Credentials'
-    ]);
-}
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            // Mark worker online using email
+            if ($user->worker) {
+                $user->worker->update(['online' => true]);
+            }
+
+            // Redirect based on role
+            $role = $user->role;
+
+            if ($role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($role === 'super_admin') {
+                return redirect()->route('super.dashboard');
+            } else {
+                return redirect()->route('dashboard');
+            }
+        }
+
+
+        if ($user) {
+            $attempts = $user->login_attempts + 1; // predict new value
+            $user->increment('login_attempts');
+
+            if ($attempts >= 3) {
+                $user->update(['is_locked' => true]);
+                return back()->withErrors([
+                    'email' => 'Your account is blocked after 3 failed attempts.'
+                ]);
+            }
+        }
+
+        return back()->withErrors([
+            'email' => 'Invalid Credentials'
+        ]);
+    }
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
+
+        // Set worker offline if exists
+        if ($user && $user->worker) {
+            $user->worker->update(['online' => false]);
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();

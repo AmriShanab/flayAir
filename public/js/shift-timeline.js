@@ -277,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="flex justify-between items-start">
                     <div class="flex-1 min-w-0">
                         <div class="text-sm font-semibold truncate">${shift.worker_name}</div>
+                        <div class="text-sm font-semibold">${shift.flight ? shift.flight.flight_number : ''}</div>
                         <div class="text-xs opacity-90">${shift.start_time}-${shift.end_time}</div>
                     </div>
                     <div class="text-2xl opacity-0 group-hover:opacity-50 transition-opacity">→</div>

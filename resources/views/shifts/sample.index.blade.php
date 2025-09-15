@@ -145,7 +145,7 @@
                                     @csrf
                                     <!-- Worker Select -->
                                     <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Staffs</label>
+                                        <label class="block text-sm font-medium text-gray-700">Worker</label>
                                         <select name="worker_id" class="w-full border-gray-300 rounded-lg mt-1">
                                             @foreach($workers as $worker)
                                                 <option value="{{ $worker->id }}">{{ $worker->full_name }}</option>
@@ -194,26 +194,27 @@
                     </div>
 
                     <!-- Logout Button -->
-                     @auth
-                        @php
-                            $dashboardRoute = 'dashboard'; // default
-                            if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin') {
-                                $dashboardRoute = 'admin.dashboard';
-                            }
-                        @endphp
-
-                        <a href="{{ route($dashboardRoute) }}" 
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg 
-                                hover:bg-gray-300 flex items-center gap-2">
-                            {{-- <svg xmlns="http://www.w3.org/2000/svg" 
-                                class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" 
+                                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg 
+                                       hover:bg-gray-300 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                 class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" 
-                                    d="M10 3a1 1 0 011 1v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H5a1 1 0 110-2h4V4a1 1 0 011-1z" 
-                                    clip-rule="evenodd" />
-                            </svg> --}}
-                            Back to Dashboard
-                        </a>
-                    @endauth
+                                      d="M3 4a1 1 0 011-1h6a1 1 0 
+                                         110 2H5v10h5a1 1 0 110 2H4a1 1 
+                                         0 01-1-1V4zm11.293 4.293a1 1 
+                                         0 011.414 0l3 3a1 1 0 
+                                         010 1.414l-3 3a1 1 
+                                         0 01-1.414-1.414L15.586 
+                                         13H9a1 1 0 110-2h6.586l-1.293-1.293a1 1 
+                                         0 010-1.414z" 
+                                      clip-rule="evenodd" />
+                            </svg>
+                            Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -225,7 +226,7 @@
             <!-- Timeline Header -->
             <div class="timeline-header">
                 <div class="worker-name-cell font-semibold text-gray-700">
-                    Staffs / Time
+                    Worker / Time
                 </div>
                 <div class="flex">
                     @for($slot = 0; $slot < 96; $slot++)
@@ -292,7 +293,7 @@
             </div>
 
             <!-- ===== Flight Timeline ===== -->
-            {{-- <div class="flight-timeline-container">
+            <div class="flight-timeline-container">
                 <div class="flight-timeline-header">
                     <div class="flight-timeline-label">Flight Schedule</div>
                     <div class="flex">
@@ -307,7 +308,7 @@
                             </div>
                         @endfor
                     </div>
-                </div> --}}
+                </div>
                 <div class="flight-timeline" id="flight-timeline">
                     <!-- JS will render flight items -->
                 </div>
@@ -396,3 +397,6 @@ function generateWorkerColor($position) {
 }
 ?>
 @endsection
+
+
+In this page need to remove the flight timeline and put all available flights from flight table it needs to display as a tile if we drag the tile and put it on user this will needs to assume for that specific user can we achieve this

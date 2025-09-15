@@ -12,6 +12,7 @@ class Shift extends Model
 
     protected $fillable = [
         'worker_id',
+        'flight_id',
         'start_time',
         'end_time',
         'shift_type',
@@ -31,6 +32,11 @@ class Shift extends Model
         return $this->belongsTo(Worker::class);
     }
 
+        public function flight()
+    {
+        return $this->belongsTo(Flight::class);
+    }
+
     public function scopeForDate($query, $date)
     {
         return $query->whereDate('start_time', $date);
@@ -40,4 +46,5 @@ class Shift extends Model
     {
         return $query->where('start_time', '>=', now());
     }
+
 }

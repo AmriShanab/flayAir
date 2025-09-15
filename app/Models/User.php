@@ -23,6 +23,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'role_id',
+        'login_attempts',
+        'is_locked',
     ];
 
     /**
@@ -51,6 +55,11 @@ class User extends Authenticatable
     public function shifts()
     {
         return $this->hasMany(Shift::class);
+    }
+
+    public function worker()
+    {
+        return $this->hasOne(Worker::class, 'email', 'email');
     }
 
     public function isAdmin(): bool
