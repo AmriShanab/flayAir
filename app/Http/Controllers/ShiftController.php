@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Flight;
+use App\Models\Notification;
 use App\Models\Shift;
 use App\Models\Worker;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ShiftController extends Controller
 {
@@ -28,8 +30,10 @@ class ShiftController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        $flights = Flight::where('status', 'scheduled')->get();
-
+        $flights = Flight::where('status', 'scheduled')
+            ->whereDate('date', $date)
+            ->get();
+        // dd($flights);
         return view('shifts.index', [
             'workers' => $workers,
             'shifts'  => $shifts,
@@ -96,42 +100,45 @@ class ShiftController extends Controller
         return view('welcome');
     }
 
-   public function getShiftsForDate(Request $request): JsonResponse
-{
-    $request->validate([
-        'date' => 'required|date'
-    ]);
+    public function getShiftsForDate(Request $request): JsonResponse
+    {
+        $request->validate([
+            'date' => 'required|date'
+        ]);
 
-    $date = Carbon::parse($request->date);
+        $date = Carbon::parse($request->date);
 
-    $shifts = Shift::with(['worker', 'flight']) // <-- load flight relation
-        ->whereDate('start_time', $date)
-        ->orderBy('start_time')
-        ->get()
-        ->map(function ($shift) {
-            return [
-                'id' => $shift->id,
-                'worker_id' => $shift->worker_id,
-                'worker_name' => $shift->worker->full_name,
-                'start_time' => $shift->start_time->format('H:i'),
-                'end_time' => $shift->end_time->format('H:i'),
-                'shift_type' => $shift->shift_type,
-                'notes' => $shift->notes,
-                'color' => $this->getShiftColor($shift->shift_type),
-                'flight_id' => $shift->flight_id,
-                'flight' => $shift->flight ? [
-                    'id' => $shift->flight->id,
-                    'flight_number' => $shift->flight->flight_number,
-                    'status' => $shift->flight->status,
-                    'type' => $shift->flight->type, // arrival/departure if needed
-                    'origin' => $shift->flight->origin ?? null,
-                    'destination' => $shift->flight->destination ?? null,
-                ] : null,
-            ];
-        });
+        $shifts = Shift::with(['worker', 'flight'])
+            ->whereDate('start_time', $date)
+            ->orderBy('start_time')
+            ->get()
+            ->map(function ($shift) {
+                return [
+                    'id' => $shift->id,
+                    'worker_id' => $shift->worker_id,
+                    'worker_name' => $shift->worker->full_name,
+                    'start_time' => $shift->start_time->format('H:i'),
+                    'end_time' => $shift->end_time->format('H:i'),
+                    'shift_type' => $shift->shift_type,
+                    'notes' => $shift->notes,
+                    'color' => $this->getShiftColor($shift->shift_type),
+                    'flight_id' => $shift->flight_id,
+                    'break_time_start' => $shift->break_time_start?->format('H:i'), // ✅ add this
+                    'break_time_end' => $shift->break_time_end?->format('H:i'),     // ✅ add this
+                    'flight' => $shift->flight ? [
+                        'id' => $shift->flight->id,
+                        'flight_number' => $shift->flight->flight_number,
+                        'status' => $shift->flight->status,
+                        'type' => $shift->flight->type,
+                        'origin' => $shift->flight->origin ?? null,
+                        'destination' => $shift->flight->destination ?? null,
+                    ] : null,
+                ];
+            });
 
-    return response()->json($shifts);
-}
+
+        return response()->json($shifts);
+    }
 
 
     public function store(Request $request): JsonResponse
@@ -239,5 +246,66 @@ class ShiftController extends Controller
     public function viewSettings()
     {
         return view('shifts.settings');
+    }
+
+
+    public function notifications()
+    {
+        $worker = Auth::user()->worker; // uses the relationship
+
+        if (!$worker) {
+            abort(403, 'No worker found for this user.');
+        }
+
+        $notifications = Notification::where('worker_id', $worker->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // dd($notifications);
+
+        return view('shifts.notifications', compact('notifications'));
+    }
+
+   public function acknowledge($id)
+{
+    $notification = Notification::find($id);
+
+    if ($notification) {
+        $notification->is_read = 2;
+        $notification->acknowledged_at = now();
+        $notification->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    return response()->json(['success' => false], 404);
+}
+
+public function dismiss($id)
+{
+    $notification = Notification::find($id);
+    if ($notification) {
+        $notification->is_read = 3; // 3 = dismissed
+        $notification->save();
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false], 404);
+}
+
+
+
+    public function markAsRead($id)
+    {
+        $notification = Notification::find($id);
+
+        if ($notification) {
+            $notification->is_read = 1;          // mark as read
+            $notification->acknowledged_at = now(); // optional timestamp
+            $notification->save();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
     }
 }

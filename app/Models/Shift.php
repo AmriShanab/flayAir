@@ -10,27 +10,30 @@ class Shift extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+   protected $fillable = [
         'worker_id',
         'flight_id',
         'start_time',
         'end_time',
+        'break_time_start',
+        'break_time_end',
         'shift_type',
         'status',
-        'notes'
+        'notes',
     ];
 
-    protected $casts = [
+   protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
-        'shift_type' => 'string',
-        'status' => 'string'
+        'break_time_start' => 'datetime',
+        'break_time_end' => 'datetime',
     ];
 
-    public function worker(): BelongsTo
-    {
-        return $this->belongsTo(Worker::class);
-    }
+    public function worker()
+{
+    return $this->belongsTo(\App\Models\Worker::class, 'worker_id');
+}
+
 
         public function flight()
     {

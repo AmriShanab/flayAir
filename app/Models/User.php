@@ -57,9 +57,10 @@ class User extends Authenticatable
         return $this->hasMany(Shift::class);
     }
 
+    // In User model
     public function worker()
     {
-        return $this->hasOne(Worker::class, 'email', 'email');
+        return $this->hasOne(Worker::class, 'email', 'email'); // email in workers, email in users
     }
 
     public function isAdmin(): bool

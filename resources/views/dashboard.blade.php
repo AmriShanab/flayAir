@@ -103,6 +103,10 @@
         <i class="fas fa-calendar-alt"></i><span>My Shifts</span>
     </a>
 
+    <a href="{{ route('worker.notifications') }}" class="menu-item">
+                <i class="fas fa-bell"></i><span>Notifications</span>
+            </a>
+
     <div class="menu-label">Account</div>
 
     <a href="{{ route('settings.view') }}" class="menu-item">

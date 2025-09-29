@@ -8,13 +8,13 @@
         <div class="page-header">
             {{-- <h1 class="page-title">Edit Worker</h1>a --}}
             <a href="{{ route('workers.index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Workers
+                <i class="bi bi-arrow-left"></i> Back to Staffs
             </a>
         </div>
 
         <div class="card">
             <div class="card-header">
-                <span>Edit Worker Details</span>
+                <span>Edit Staffs Details</span>
             </div>
             <div class="card-body">
                 <form action="{{ route('workers.update', $worker->id) }}" method="POST">
@@ -100,7 +100,7 @@
                     
                     <div class="d-flex justify-content-between align-items-center">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i> Update Worker
+                            <i class="bi bi-check-circle"></i> Update Staff
                         </button>
                         
                         <a href="{{ route('workers.index') }}" class="btn btn-outline-secondary">

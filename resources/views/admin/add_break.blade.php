@@ -9,31 +9,32 @@
 <div class="row">
     <div class="col-12">
         <div class="page-header">
-            <h1 class="page-title">Add New Shift</h1>
+            <h1 class="page-title">Add Break</h1>
             <a href="{{ route('shifts.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Back to Shifts
             </a>
         </div>
 
-        {{-- @if(session('success'))
+        @if(session('success'))
             <div class="alert alert-success">
                 <div>{{ session('success') }}</div>
                 <button type="button" class="btn-close">&times;</button>
             </div>
-        @endif --}}
+        @endif
 
         <div class="card">
             <div class="card-header">
-                <span>Shift Details</span>
+                <span>Break Details</span>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.store.shifts') }}" method="POST" class="row g-3">
+                <form action="{{ route('admin.shifts.store-break') }}" method="POST" class="row g-3">
                     @csrf
-                    <input type="hidden" name="shift_type" value="1">
+                    <input type="hidden" name="shift_type" value="3">
+                    
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Staffs <span class="text-danger">*</span></label>
+                        <label class="form-label">Staff <span class="text-danger">*</span></label>
                         <select name="worker_id" class="form-select @error('worker_id') is-invalid @enderror" required>
-                            <option value="">Select Staffs</option>
+                            <option value="">Select Staff</option>
                             @foreach($workers as $worker)
                                 <option value="{{ $worker->id }}" {{ old('worker_id') == $worker->id ? 'selected' : '' }}>
                                     {{ $worker->first_name }} {{ $worker->last_name }}
@@ -45,84 +46,24 @@
                         @enderror
                     </div>
 
-                    {{-- <div class="col-md-6 mb-3">
-                        <label class="form-label">Shift Type <span class="text-danger">*</span></label>
-                        <select name="shift_type" class="form-select @error('shift_type') is-invalid @enderror" required>
-                            <option value="">Select Shift Type</option>
-                            <option value="morning" {{ old('shift_type') == 'morning' ? 'selected' : '' }}>Morning</option>
-                            <option value="afternoon" {{ old('shift_type') == 'afternoon' ? 'selected' : '' }}>Afternoon</option>
-                            <option value="evening" {{ old('shift_type') == 'evening' ? 'selected' : '' }}>Evening</option>
-                            <option value="night" {{ old('shift_type') == 'night' ? 'selected' : '' }}>Night</option>
-                        </select>
-                        @error('shift_type')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div> --}}
-
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Start Time <span class="text-danger">*</span></label>
-                        <input type="datetime-local" name="start_time" class="form-control @error('start_time') is-invalid @enderror"
-                            value="{{ old('start_time') }}" required>
-                        @error('start_time')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">End Time <span class="text-danger">*</span></label>
-                        <input type="datetime-local" name="end_time" class="form-control @error('end_time') is-invalid @enderror"
-                            value="{{ old('end_time') }}" required>
-                        @error('end_time')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                     {{-- <div class="col-md-6 mb-3">
-                        <label class="form-label">Break Time Start <span class="text-danger">*</span></label>
+                        <label class="form-label">Break Start Time <span class="text-danger">*</span></label>
                         <input type="datetime-local" name="break_time_start" class="form-control @error('break_time_start') is-invalid @enderror"
                             value="{{ old('break_time_start') }}" required>
                         @error('break_time_start')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div> --}}
+                    </div>
 
-                      {{-- <div class="col-md-6 mb-3">
-                        <label class="form-label">Break Time End <span class="text-danger">*</span></label>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Break End Time <span class="text-danger">*</span></label>
                         <input type="datetime-local" name="break_time_end" class="form-control @error('break_time_end') is-invalid @enderror"
                             value="{{ old('break_time_end') }}" required>
                         @error('break_time_end')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div> --}}
-
-
-                    {{-- <div class="col-md-6 mb-3">
-                        <label class="form-label">Status <span class="text-danger">*</span></label>
-                        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
-                            <option value="">Select Status</option>
-                            <option value="scheduled" {{ old('status') == 'scheduled' ? 'selected' : '' }}>Scheduled</option>
-                            <option value="in_progress" {{ old('status') == 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                            <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                        </select>
-                        @error('status')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div> --}}
-                    <div class="col-12 mb-3">
-                        <label class="form-label">Select Flight</label>
-                        <select name="flight_id" class="form-control @error('flight_id') is-invalid @enderror">
-                            <option value="">-- Select Flight --</option>
-                            @foreach($flights as $flight)
-                              <option value="{{ $flight->id }}" {{ old('flight_id') == $flight->id ? 'selected' : '' }}>
-                                        {{ $flight->flight_number }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('flight_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
                     </div>
+
                     <div class="col-12 mb-3">
                         <label class="form-label">Notes</label>
                         <textarea name="notes" rows="3" class="form-control @error('notes') is-invalid @enderror">{{ old('notes') }}</textarea>
@@ -131,12 +72,9 @@
                         @enderror
                     </div>
 
-                  
-
-
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-plus-circle"></i> Add Shift
+                            <i class="bi bi-plus-circle"></i> Add Break
                         </button>
                         <a href="{{ route('shifts.index') }}" class="btn btn-outline-secondary">
                             Cancel
@@ -253,30 +191,18 @@
         const localISOTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
         
         // Set default values if no previous input
-        if (!document.querySelector('input[name="start_time"]').value) {
-            document.querySelector('input[name="start_time"]').value = localISOTime;
+        if (!document.querySelector('input[name="break_time_start"]').value) {
+            document.querySelector('input[name="break_time_start"]').value = localISOTime;
         }
         
-        if (!document.querySelector('input[name="end_time"]').value) {
-            const endTime = new Date(now.getTime() + 8 * 60 * 60000); // 8 hours later
+        if (!document.querySelector('input[name="break_time_end"]').value) {
+            const endTime = new Date(now.getTime() + 30 * 60000); // 30 minutes later
             const endISOTime = new Date(endTime - timezoneOffset).toISOString().slice(0, 16);
-            document.querySelector('input[name="end_time"]').value = endISOTime;
+            document.querySelector('input[name="break_time_end"]').value = endISOTime;
         }
     });
 
-        flatpickr("input[name='start_time']", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i", // 24-hour format
-        time_24hr: true
-    });
-
-    flatpickr("input[name='end_time']", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i", // 24-hour format
-        time_24hr: true
-    });
-
-       flatpickr("input[name='break_time_start']", {
+    flatpickr("input[name='break_time_start']", {
         enableTime: true,
         dateFormat: "Y-m-d H:i", // 24-hour format
         time_24hr: true

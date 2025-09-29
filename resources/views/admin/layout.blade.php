@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    {{-- <meta http-equiv="refresh" content="60"> --}}
+    <title>Admin Dashboard</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -542,7 +543,7 @@
     <!-- Sidebar -->
     <nav class="sidebar d-flex flex-column">
         <div class="sidebar-header">
-            <h4>Admin Panel</h4>
+            <h4>Admin Dashboard</h4>
         </div>
         <div class="flex-grow-1 p-2">
             <ul class="nav flex-column mb-auto">
@@ -565,9 +566,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.shifts.add-break') }}" class="nav-link {{ request()->routeIs('admin.shifts.add-break') ? 'active' : '' }}">
+                        <i class="bi bi-cup-straw"></i>
+                        <span>Add Break</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('workers.index') }}" class="nav-link {{ request()->routeIs('workers.index') ? 'active' : '' }}">
                         <i class="bi bi-people"></i>
-                        <span>Manage Workers</span>
+                        <span>Manage Staffs</span>
                     </a>
                 </li>
 
@@ -585,24 +592,24 @@
 
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a href="{{ route('shifts.index') }}" class="nav-link {{ request()->routeIs('shifts.index') ? 'active' : '' }}">
+                <li class="nav-item">
+                    <a href="{{ route('admin.view.shifts') }}" class="nav-link {{ request()->routeIs('shifts.index') ? 'active' : '' }}">
                         <i class="bi bi-calendar-week"></i>
                         <span>View Shifts</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="{{ route('flights.index') }}" class="nav-link {{ request()->routeIs('flights.index') ? 'active' : '' }}">
                         <i class="bi bi-airplane-engines"></i>
                         <span>View Flights</span>
                     </a>
                 </li> --}}
-                {{-- <li class="nav-item">
-                    <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.index') ? 'active' : '' }}">
-                        <i class="bi bi-graph-up"></i>
-                        <span>Reports</span>
+                <li class="nav-item">
+                    <a href="{{ route('all.notifications') }}" class="nav-link {{ request()->routeIs('reports.index') ? 'active' : '' }}">
+                        <i class="bi bi-bell"></i>
+                        <span>Notifications</span>
                     </a>
-                </li> --}}
+                </li>
                 {{-- <li class="nav-item">
                     <a href="{{ route('settings.index') }}" class="nav-link {{ request()->routeIs('settings.index') ? 'active' : '' }}">
                         <i class="bi bi-gear"></i>

@@ -251,7 +251,7 @@
                 <i class="fas fa-plane"></i>
             </div>
             <h1>FlayAir Airways</h1>
-            <p>Crew Shift Management System</p>
+            <p>Manage your shifts with ease, anytime, anywhere.</p>
         </div>
         
         <div class="form-section">
@@ -290,19 +290,36 @@
                 @csrf
                 <div class="input-group">
                     <label for="email">Email Address</label>
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" name="email" placeholder="crew.member@FlayAirairways.com" required>
+                    <i class="fas fa-envelope" style="bottom:25px;"></i>
+                    <input type="email" id="email" name="email" placeholder="example@flayAir.com" required>
                 </div>
                 
-                <div class="input-group">
+                <div class="input-group" style="position: relative;">
                     <label for="password">Password</label>
                     <i class="fas fa-lock"></i>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <input type="password" id="password" name="password" placeholder="********" required>
+                    <span id="togglePassword" style="position: absolute; right: 5px; top: 10px; cursor: pointer; color: #1a56db;">
+                        <i class="fas fa-eye"></i>
+                    </span>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const passwordInput = document.getElementById('password');
+                        const togglePassword = document.getElementById('togglePassword');
+                        const toggleIcon = togglePassword.querySelector('i');
+
+                        togglePassword.addEventListener('click', function () {
+                            const type = passwordInput.type === 'password' ? 'text' : 'password';
+                            passwordInput.type = type;
+                            toggleIcon.classList.toggle('fa-eye');
+                            toggleIcon.classList.toggle('fa-eye-slash');
+                        });
+                    });
+                </script>
                 
-                <div class="forgot-password">
+                {{-- <div class="forgot-password">
                     <a href="#">Forgot Password?</a>
-                </div>
+                </div> --}}
                 
                 <button type="submit">Login to Dashboard</button>
             </form>

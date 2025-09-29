@@ -3,21 +3,28 @@
 @section('page-title', 'Add Flight')
 
 @section('content')
+<head>
+    <style>
+        .bck-flight {
+            margin-left: 95 0px !important;
+        }
+    </style>
+</head>
 <div class="row">
     <div class="col-12">
         <div class="page-header">
-            <h1 class="page-title">Add New Flight</h1>
-            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">
+            {{-- <h1 class="page-title">Add New Flight</h1> --}}
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary bck-flight">
                 <i class="bi bi-arrow-left"></i> Back to Flights
             </a>
         </div>
 
-        @if(session('success'))
+        {{-- @if(session('success'))
             <div class="alert alert-success">
                 <div>{{ session('success') }}</div>
                 <button type="button" class="btn-close">&times;</button>
             </div>
-        @endif
+        @endif --}}
 
         <div class="card">
             <div class="card-header">
@@ -50,7 +57,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Scheduled Time <span class="text-danger">*</span></label>
-                        <input type="time" name="scheduled_time" class="form-control @error('scheduled_time') is-invalid @enderror" 
+                        <input type="text" id="scheduled_time" name="scheduled_time" class="form-control @error('scheduled_time') is-invalid @enderror" 
                                value="{{ old('scheduled_time') }}" required>
                         @error('scheduled_time')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -130,102 +137,43 @@
     </div>
 </div>
 
+<!-- Flatpickr CSS & JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <style>
-    .form-label {
-        font-weight: 500;
-        color: var(--dark-text);
-        margin-bottom: 0.5rem;
-    }
-    
-    .form-control, .form-select {
-        border-radius: 0.5rem;
-        border: 1px solid var(--border);
-        padding: 0.75rem 1rem;
-        transition: all 0.2s ease;
-    }
-    
-    .form-control:focus, .form-select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
-    }
-    
-    .btn {
-        border-radius: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.2s ease;
-    }
-    
-    .btn-primary {
-        background: var(--primary);
-        border: none;
-    }
-    
-    .btn-primary:hover {
-        background: var(--primary-dark);
-        transform: translateY(-1px);
-    }
-    
-    .btn-secondary {
-        background: #6c757d;
-        border: none;
-    }
-    
-    .btn-secondary:hover {
-        background: #5a6268;
-        transform: translateY(-1px);
-    }
-    
-    .btn-outline-secondary {
-        border: 1px solid var(--border);
-        color: var(--mid-text);
-    }
-    
-    .btn-outline-secondary:hover {
-        background: #f8f9fa;
-        border-color: var(--border);
-    }
-    
-    .text-danger {
-        color: var(--danger) !important;
-    }
-    
-    .invalid-feedback {
-        display: block;
-        margin-top: 0.25rem;
-        color: var(--danger);
-    }
-    
-    .alert {
-        padding: 1rem 1.5rem;
-        border-radius: 0.5rem;
-        margin-bottom: 1.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #d1fae5;
-        color: #065f46;
-        border-left: 4px solid var(--success);
-    }
-    
-    .alert .btn-close {
-        background: none;
-        border: none;
-        font-size: 1.25rem;
-        cursor: pointer;
-        color: inherit;
-    }
+    .form-label { font-weight: 500; color: var(--dark-text); margin-bottom: 0.5rem; }
+    .form-control, .form-select { border-radius: 0.5rem; border: 1px solid var(--border); padding: 0.75rem 1rem; transition: all 0.2s ease; }
+    .form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 0.2rem rgba(79,70,229,0.25); }
+    .btn { border-radius: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease; }
+    .btn-primary { background: var(--primary); border: none; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-secondary { background: #6c757d; border: none; }
+    .btn-secondary:hover { background: #5a6268; transform: translateY(-1px); }
+    .btn-outline-secondary { border: 1px solid var(--border); color: var(--mid-text); }
+    .btn-outline-secondary:hover { background: #f8f9fa; border-color: var(--border); }
+    .text-danger { color: var(--danger) !important; }
+    .invalid-feedback { display: block; margin-top: 0.25rem; color: var(--danger); }
+    .alert { padding: 1rem 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; background-color: #d1fae5; color: #065f46; border-left: 4px solid var(--success); }
+    .alert .btn-close { background: none; border: none; font-size: 1.25rem; cursor: pointer; color: inherit; }
 </style>
 
 <script>
-    // Close alert functionality
-    document.querySelectorAll('.btn-close').forEach(button => {
-        button.addEventListener('click', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    // Close alert
+    document.querySelectorAll('.btn-close').forEach(btn => {
+        btn.addEventListener('click', function() {
             this.closest('.alert').style.display = 'none';
         });
     });
+
+    // Initialize Flatpickr time picker (24-hour)
+    flatpickr("#scheduled_time", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i", // 24-hour format
+        time_24hr: true,
+    });
+});
 </script>
 @endsection

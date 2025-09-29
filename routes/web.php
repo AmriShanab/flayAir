@@ -8,6 +8,7 @@ use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Middleware\RoleMiddleware;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,6 +31,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/flights/data', [ShiftController::class, 'getFlightsForDate'])->name('flights.data');
     Route::get('/shifts/data', [ShiftController::class, 'getShiftsForDate'])->name('flights.data');
     Route::get('/settings', [ShiftController::class, 'viewSettings'])->name('settings.view');
+    Route::get('/notifications', [ShiftController::class, 'viewNotifications'])->name('notifications.view');
+    Route::get('/worker/notifications', [ShiftController::class, 'notifications'])->name('worker.notifications');
+    Route::post('/notification/acknowledge/{id}', [ShiftController::class, 'acknowledge']);
+
+    Route::post('/notification/mark-read/{id}', [ShiftController::class, 'markAsRead'])->name('notification.markRead');
+    Route::post('/notification/dismiss/{id}', [ShiftController::class, 'dismiss'])->name('notification.dismiss');
+
 });
 
 // Admin Routes
@@ -41,8 +49,11 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->prefix('admin')->
 
     // Shifts & Flights
     Route::get('/add/shifts', [AdminController::class, 'addShifts'])->name('admin.add.shifts');
+    Route::get('/shifts', [AdminController::class, 'viewShifts'])->name('admin.view.shifts');
     Route::get('/add/flights', [AdminController::class, 'addFlights'])->name('admin.add.flights');
     Route::post('/add/store/shifts', [AdminController::class, 'storeShifts'])->name('admin.store.shifts');
+    Route::post('/admin/shifts/store-web', [AdminController::class, 'storeShiftsWeb'])->name('admin.store.shifts.web');
+
     Route::post('/add/store/flights', [AdminController::class, 'storeFlights'])->name('admin.store.flights');
 
     // User Management
@@ -51,9 +62,27 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->prefix('admin')->
 
     // Store Shifts From Shifts Page
     Route::post('/shifts/store', [AdminController::class, 'storeShiftsFromShiftsPage'])->name('admin.shifts.store');
+    Route::post('/shifts/store-drag', [AdminController::class, 'storeDragDropShift'])
+    ->name('admin.shifts.store.drag');
+
+
+    // inside your admin group
+    Route::put('/shifts/{id}', [AdminController::class, 'updateShift'])->name('admin.shifts.update');
+    Route::delete('/shifts/{id}', [AdminController::class, 'destroyShift'])->name('admin.shifts.destroy');
+
 
     // Assign Flight to Worker
     Route::post('/assign-flight', [ShiftController::class, 'assignFlight'])->name('assign.flight');
+
+    // Notifications
+    Route::get('/notifications', [AdminController::class, 'viewAllNotifications'])->name('all.notifications');
+    Route::post('/admin/notifications/acknowledge/{id}', [AdminController::class, 'acknowledge']);
+    Route::delete('/admin/notifications/{id}', [AdminController::class, 'destroy'])->name('notifications.destroy');
+
+
+    // Break Meal Routes
+    Route::get('/admin/shifts/add-break', [AdminController::class, 'addBreak'])->name('admin.shifts.add-break');
+    Route::post('/admin/shifts/store-break', [AdminController::class, 'storeBreak'])->name('admin.shifts.store-break');
 
 });
 

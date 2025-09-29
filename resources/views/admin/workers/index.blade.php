@@ -1,9 +1,15 @@
 @extends('admin.layout')
 
-@section('page-title', 'Workers Management')
+@section('page-title', 'Staffs Management')
 
 @section('content')
-
+<head>
+    <style>
+        .sts-clr {
+            color: black
+        }
+    </style>
+</head>
     <!-- Main Content -->
     
     
@@ -12,22 +18,22 @@
         <div class="page-header">
             {{-- <h1 class="page-title">Workers</h1> --}}
             <a href="{{ route('workers.create') }}" class="add-btn">
-                <i class="bi bi-plus-circle"></i> Add Worker
+                <i class="bi bi-plus-circle"></i> Add Staffs
             </a>
         </div>
 
         <!-- Success Alert -->
-        @if(session('success'))
+        {{-- @if(session('success'))
             <div class="alert">
                 <div>{{ session('success') }}</div>
                 <button type="button" class="btn-close">&times;</button>
             </div>
-        @endif
+        @endif --}}
 
         <!-- Workers Table Card -->
         <div class="card">
             <div class="card-header">
-                <span>Workers List</span>
+                <span>Staffs List</span>
             </div>
             <div class="card-body">
                 <div class="table-container">
@@ -52,7 +58,7 @@
                                 <td data-label="Phone">{{ $worker->phone ?? '-' }}</td>
                                 <td data-label="Position">{{ $worker->position ?? '-' }}</td>
                                 <td data-label="Status">
-                                    <span class="badge {{ $worker->status }}">
+                                    <span class="badge sts-clr" style="background-color: {{ $worker->status === 'active' ? '#28a745' : '#dc3545' }}; color: white;">
                                         {{ ucfirst($worker->status) }}
                                     </span>
                                 </td>
@@ -76,7 +82,7 @@
                                 <td colspan="7">
                                     <div class="empty-state">
                                         <i class="bi bi-people"></i>
-                                        <h3>No workers found</h3>
+                                        <h3>No staffs found</h3>
                                         <p>Get started by adding your first worker</p>
                                     </div>
                                 </td>

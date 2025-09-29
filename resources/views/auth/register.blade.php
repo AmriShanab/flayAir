@@ -274,55 +274,39 @@
     </div>
 
     <script>
-        // Simple animation for input focus
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.querySelector('i').style.color = '#0a2e6f';
-            });
-            
-            input.addEventListener('blur', function() {
-                this.parentElement.querySelector('i').style.color = '#1a56db';
-            });
+document.getElementById('registration-form').addEventListener('submit', function(e) {
+    // Clear previous errors
+    const errorList = document.getElementById('error-list');
+    errorList.innerHTML = '';
+    document.getElementById('error-message').style.display = 'none';
+
+    // Basic client-side validation
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password_confirmation').value;
+
+    let errors = [];
+
+    if (!name) errors.push('Name is required.');
+    if (!email) errors.push('Email is required.');
+    if (!password) errors.push('Password is required.');
+    if (password !== passwordConfirm) errors.push('Passwords do not match.');
+    if (password && password.length < 6) errors.push('Password must be at least 6 characters.');
+
+    if (errors.length > 0) {
+        e.preventDefault(); // prevent form submission if errors
+        errors.forEach(error => {
+            const li = document.createElement('li');
+            li.textContent = error;
+            errorList.appendChild(li);
         });
-        
-        // In a real application, you would show errors based on server response
-        // This is just a simulation of how it would work
-        document.getElementById('registration-form').addEventListener('submit', function(e) {
-            // For demonstration purposes, we're preventing actual form submission
-            e.preventDefault();
-            
-            // Clear previous errors
-            document.getElementById('error-list').innerHTML = '';
-            document.getElementById('error-message').style.display = 'none';
-            
-            // Simulate validation errors (remove this in production)
-            const simulateErrors = false; // Set to true to see error display
-            
-            if (simulateErrors) {
-                // Simulate some validation errors
-                const errors = [
-                    'The name field is required',
-                    'The email has already been taken',
-                    'The password must be at least 8 characters'
-                ];
-                
-                errors.forEach(error => {
-                    const li = document.createElement('li');
-                    li.textContent = error;
-                    document.getElementById('error-list').appendChild(li);
-                });
-                
-                // Show error message
-                document.getElementById('error-message').style.display = 'block';
-                
-                // Scroll to errors
-                document.getElementById('error-message').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                // In a real application, you would allow the form to submit
-                // this.submit();
-                alert('Registration successful! In a real application, this would redirect.');
-            }
-        });
-    </script>
+        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('error-message').scrollIntoView({ behavior: 'smooth' });
+    }
+    // If no errors, the form will submit normally to your Laravel route
+});
+</script>
+
 </body>
 </html>

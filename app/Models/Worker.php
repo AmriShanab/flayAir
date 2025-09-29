@@ -24,14 +24,20 @@ class Worker extends Model
         'online' => 'boolean',
     ];
 
-    public function shifts(): HasMany
-    {
-        return $this->hasMany(Shift::class);
-    }
+  public function shifts()
+{
+    return $this->hasMany(\App\Models\Shift::class, 'worker_id');
+}
+
 
     public function user()
     {
         return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+     public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 
 

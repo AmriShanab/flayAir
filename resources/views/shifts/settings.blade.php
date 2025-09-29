@@ -53,6 +53,7 @@
             <a href="/shifts" class="menu-item">
                 <i class="fas fa-calendar-alt"></i><span>My Shifts</span>
             </a>
+            
 
             <div class="menu-label">Account</div>
 

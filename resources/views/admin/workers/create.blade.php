@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('content')
-<h2>{{ isset($worker) ? 'Edit' : 'Add' }} Worker</h2>
+<h2>{{ isset($worker) ? 'Edit' : 'Add' }} Staffs</h2>
 
 @if ($errors->any())
 <div class="alert alert-danger">

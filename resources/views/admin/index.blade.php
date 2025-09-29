@@ -1,6 +1,8 @@
 @extends('admin.layout')
 
-@section('page-title', 'Admin Dashboard')
+@section('page-title')
+    <h4>Welcome To the System {{ Auth::user()->name ?? 'Admin' }}</h4>
+@endsection
 
 @section('content')
 <div class="dashboard-header">
@@ -19,7 +21,7 @@
         <div class="stat-info">
             {{-- @dd($totalWorkers) --}}
             <h3>{{ $totalWorkers ?? 0 }}</h3>
-            <p>Total Workers</p>
+            <p>Total Staffs</p>
         </div>
     </div>
     <div class="stat-card">
@@ -47,7 +49,7 @@
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="card">
             <div class="card-header">
-                <span>Recent Workers</span>
+                <span>Today Staffs</span>
                 <i class="bi bi-people"></i>
             </div>
             <div class="card-body p-0">
@@ -73,7 +75,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="3" class="text-center text-muted py-3">No workers found</td>
+                                <td colspan="3" class="text-center text-muted py-3">No Staffs found today</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -81,7 +83,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('workers.index') }}">View All Workers</a>
+                <a href="{{ route('workers.index') }}">View All Staffs</a>
             </div>
         </div>
     </div>
@@ -98,7 +100,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Worker</th>
+                                <th>Staffs</th>
                                 <th>Type</th>
                                 <th>Start</th>
                                 <th>Status</th>
@@ -139,7 +141,7 @@
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="card">
             <div class="card-header">
-                <span>Recent Flights</span>
+                <span>Today Flights</span>
                 <i class="bi bi-airplane"></i>
             </div>
             <div class="card-body p-0">

@@ -42,6 +42,11 @@ class Flight extends Model
         return $query->where('type', 'arrival');
     }
 
+    public function shifts()
+    {
+        return $this->hasMany(Shift::class);
+    }
+
     /**
      * Scope a query to only include departures.
      */
@@ -56,6 +61,11 @@ class Flight extends Model
     public function getFormattedTypeAttribute()
     {
         return ucfirst($this->type);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 
     /**
