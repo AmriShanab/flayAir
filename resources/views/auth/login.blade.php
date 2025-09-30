@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlayAir Airways - Crew Login</title>
+    <title>Zoroval - Crew Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -250,7 +250,7 @@
             <div class="brand-logo">
                 <i class="fas fa-plane"></i>
             </div>
-            <h1>FlayAir Airways</h1>
+            <h1>Zoroval</h1>
             <p>Manage your shifts with ease, anytime, anywhere.</p>
         </div>
         

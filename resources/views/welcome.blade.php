@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CrewSync - Crew Shift Management</title>
+    <title>Zoroval - Crew Shift Management</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     <style>
@@ -486,7 +486,7 @@
                             <path d="M17 14H15V17H17V14Z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span>CrewSync</span>
+                    <span>Zoroval</span>
                 </div>
                 <div class="nav-buttons">
                     <a href="{{ route('login') }}" class="btn btn-outline">Log In</a>
@@ -501,7 +501,7 @@
         <div class="container">
             <div class="hero-content fade-in-up">
                 <h1>Streamline Your Crew Scheduling</h1>
-                <p>CrewSync is the ultimate solution for managing your team's shifts, schedules, and availability. Save time, reduce errors, and keep your crew connected.</p>
+                <p>Zoroval is the ultimate solution for managing your team's shifts, schedules, and availability. Save time, reduce errors, and keep your crew connected.</p>
                 <div class="hero-buttons">
                     <a href="{{ route('register.form') }}" class="btn btn-primary">Get Started Free</a>
                     <a href="#features" class="btn btn-outline">Learn More</a>
@@ -592,7 +592,7 @@
     <section class="cta">
         <div class="container">
             <h2 class="fade-in-up">Ready to Transform Your Crew Management?</h2>
-            <p class="fade-in-up delay-1">Join thousands of aviation professionals who trust CrewSync to manage their schedules efficiently.</p>
+            <p class="fade-in-up delay-1">Join thousands of aviation professionals who trust Zoroval to manage their schedules efficiently.</p>
             <div class="cta-buttons fade-in-up delay-2">
                 <a href="{{ route('register.form') }}" class="btn btn-light">Start Free Trial</a>
                 <a href="{{ route('login') }}" class="btn btn-transparent">Sign In</a>
@@ -613,7 +613,7 @@
                             <path d="M17 14H15V17H17V14Z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span>CrewSync</span>
+                    <span>Zoroval</span>
                 </div>
                 <p>Streamlining crew management for the aviation industry</p>
                 <div class="footer-links">
@@ -624,7 +624,7 @@
                     <a href="#">Privacy Policy</a>
                 </div>
                 <div class="copyright">
-                    &copy; 2023 CrewSync. All rights reserved.
+                    &copy; 2023 Zoroval. All rights reserved.
                 </div>
             </div>
         </div>

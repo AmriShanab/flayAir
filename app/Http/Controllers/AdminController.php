@@ -51,7 +51,9 @@ class AdminController extends Controller
     public function addShifts()
     {
         $workers = Worker::all(); // fetch all workers
-        $flights = Flight::where('status', 'scheduled')->get();
+        $flights = Flight::where('status', 'scheduled')
+            ->whereDate('date', today())
+            ->get();
         return view('admin.add_shifts', compact('workers', 'flights'));
     }
 

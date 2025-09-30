@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlayAir Airways - Crew Registration</title>
+    <title>Zoroval - Crew Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -222,7 +222,7 @@
             <div class="brand-logo">
                 <i class="fas fa-plane"></i>
             </div>
-            <h1>FlayAir Airways</h1>
+            <h1>Zoroval</h1>
             <p>Join our crew management system and streamline your scheduling</p>
         </div>
         
@@ -248,7 +248,7 @@
                 <div class="input-group">
                     <label for="email">Email Address</label>
                     <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" name="email" placeholder="crew.member@FlayAirairways.com" value="{{ old('email') }}" required>
+                    <input type="email" id="email" name="email" placeholder="crew.member@zoroval.com" value="{{ old('email') }}" required>
                 </div>
                 
                 <div class="input-group">

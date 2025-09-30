@@ -278,31 +278,45 @@ document.addEventListener("DOMContentLoaded", function(){
         const startVal = toDateTimeLocal(shift.start_time);
         const endVal = toDateTimeLocal(shift.end_time);
 
+        // Fetch today's scheduled flights from global or fallback to empty array
+        const todayFlights = (window.todayFlights || []).filter(f => f.status === "scheduled");
+
         content.innerHTML = `
             <form id="edit-shift-form" class="space-y-4" novalidate>
-                <input type="hidden" name="worker_id" value="${shift.worker_id ?? ''}">
-                <input type="hidden" name="flight_id" value="${shift.flight_id ?? ''}">
-                <input type="hidden" name="shift_type" value="${shift.shift_type ?? ''}">
+            <input type="hidden" name="worker_id" value="${shift.worker_id ?? ''}">
+            <input type="hidden" name="shift_type" value="${shift.shift_type ?? ''}">
 
-                <div>
-                    <label>Start</label>
-                    <input type="datetime-local" name="start_time" value="${startVal}" class="w-full p-2 border rounded" required>
-                </div>
-                <div>
-                    <label>End</label>
-                    <input type="datetime-local" name="end_time" value="${endVal}" class="w-full p-2 border rounded" required>
-                </div>
-                <div>
-                    <label>Notes</label>
-                    <textarea name="notes" class="w-full p-2 border rounded">${shift.notes || ""}</textarea>
-                </div>
+            <div>
+                <label>Flight</label>
+                <select name="flight_id" class="w-full p-2 border rounded">
+                <option value="">-- No Flight --</option>
+                ${todayFlights.map(f => `
+                    <option value="${f.id}" ${shift.flight_id == f.id ? "selected" : ""}>
+                    ${f.flight_number} (${f.scheduled_time})
+                    </option>
+                `).join("")}
+                </select>
+            </div>
 
-                <div id="edit-form-errors" style="color: #b91c1c; font-size: .9rem;"></div>
+            <div>
+                <label>Start</label>
+                <input type="datetime-local" name="start_time" value="${startVal}" class="w-full p-2 border rounded" required>
+            </div>
+            <div>
+                <label>End</label>
+                <input type="datetime-local" name="end_time" value="${endVal}" class="w-full p-2 border rounded" required>
+            </div>
+            <div>
+                <label>Notes</label>
+                <textarea name="notes" class="w-full p-2 border rounded">${shift.notes || ""}</textarea>
+            </div>
 
-                <div class="flex justify-end gap-2">
-                    <button type="button" id="edit-cancel-btn" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-                    <button type="submit" id="edit-submit-btn" class="px-4 py-2 bg-blue-600 text-white rounded">Update</button>
-                </div>
+            <div id="edit-form-errors" style="color: #b91c1c; font-size: .9rem;"></div>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" id="edit-cancel-btn" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+                <button type="submit" id="edit-submit-btn" class="px-4 py-2 bg-blue-600 text-white rounded">Update</button>
+            </div>
             </form>
         `;
 

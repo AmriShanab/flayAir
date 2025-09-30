@@ -633,8 +633,9 @@
     <div class="main-content">
         <div class="dashboard-header">
             <h2>@yield('page-title', 'Admin Dashboard')</h2>
-            <div class="date-display">
-                <i class="bi bi-calendar"></i> {{ now()->format('l, F j, Y') }}
+           <div class="date-display">
+                <i class="bi bi-calendar"></i>
+                <span id="toronto-time"></span>
             </div>
         </div>
 
@@ -674,6 +675,27 @@
             alert.style.display = 'none';
         });
     }, 5000);
+</script>
+
+<script>
+function updateTorontoTime() {
+    const options = {
+        timeZone: "America/Toronto",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: true
+    };
+    const formatter = new Intl.DateTimeFormat([], options);
+    document.getElementById("toronto-time").textContent = formatter.format(new Date());
+}
+
+setInterval(updateTorontoTime, 1000);
+updateTorontoTime(); // run once at load
 </script>
 </body>
 </html>

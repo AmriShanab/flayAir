@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlayAir Airways - Crew Dashboard</title>
+    <title>Zoroval - Crew Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -90,7 +90,7 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo"><i class="fas fa-plane"></i></div>
-            <h2>FlayAir Airways</h2>
+            <h2>Zoroval</h2>
         </div>
      <div class="sidebar-menu">
     <div class="menu-label">Main</div>
