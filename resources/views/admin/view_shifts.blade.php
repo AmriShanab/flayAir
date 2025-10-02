@@ -216,7 +216,7 @@
                         <th>Duration</th>
                         <th>Flight No.</th>
                         <th>Status</th>
-                        {{-- <th>Actions</th> --}}
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="shiftsTableBody">

@@ -9,12 +9,14 @@
 
         <div class="mb-3">
             <label>Start Time</label>
-            <input type="datetime-local" name="start_time" value="{{ $shift->start_time }}" class="form-control">
+            <input type="text" name="start_time" value="{{ $shift->start_time }}" 
+                   class="form-control datetimepicker" id="start_time">
         </div>
 
         <div class="mb-3">
             <label>End Time</label>
-            <input type="datetime-local" name="end_time" value="{{ $shift->end_time }}" class="form-control">
+            <input type="text" name="end_time" value="{{ $shift->end_time }}" 
+                   class="form-control datetimepicker" id="end_time">
         </div>
 
         <div class="mb-3">
@@ -30,4 +32,31 @@
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>
+
+{{-- Flatpickr CSS & JS --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const startPicker = flatpickr("#start_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true,
+            minuteIncrement: 1,
+            onChange: function(selectedDates) {
+                if (selectedDates.length > 0) {
+                    endPicker.set("minDate", selectedDates[0]); // ✅ prevent end before start
+                }
+            }
+        });
+
+        const endPicker = flatpickr("#end_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true,
+            minuteIncrement: 1
+        });
+    });
+</script>
 @endsection
