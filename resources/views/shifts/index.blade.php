@@ -117,6 +117,41 @@
         .floating-flights-panel:not(.minimized) ~ .timeline-container {
             padding-bottom: 220px; /* Space for expanded panel */
         }
+
+        /* Reopen Flights Panel Button */
+        #reopen-flights-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        #reopen-flights-panel:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+        }
+
+        #reopen-flights-panel.hidden {
+            display: none;
+        }
+
+        .flight-icon {
+            width: 24px;
+            height: 24px;
+        }
     </style>
 </head>
 
@@ -420,6 +455,14 @@
                 </div>
             </div>
         </div>
+
+        <!-- Floating Reopen Button -->
+        <button id="reopen-flights-panel" class="hidden">
+            <svg class="flight-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13"></path>
+                <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+            </svg>
+        </button>
     @endif
 @endauth
 
@@ -524,6 +567,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const panelContent = document.getElementById('flights-panel-content');
     const minimizeBtn = document.getElementById('flights-panel-minimize');
     const closeBtn = document.getElementById('flights-panel-close');
+    const reopenBtn = document.getElementById('reopen-flights-panel');
 
     if (flightsPanel) {
         // Minimize/Expand functionality
@@ -552,12 +596,14 @@ document.addEventListener('DOMContentLoaded', function() {
         closeBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             flightsPanel.classList.add('hidden');
-            
-            // Show reopen button somewhere (optional)
-            setTimeout(() => {
-                // You could add a small button to reopen the panel
-                // For now, we'll just hide it completely
-            }, 300);
+            reopenBtn.classList.remove('hidden');
+        });
+
+        // Reopen functionality
+        reopenBtn.addEventListener('click', function() {
+            flightsPanel.classList.remove('hidden');
+            flightsPanel.classList.remove('minimized');
+            reopenBtn.classList.add('hidden');
         });
 
         // Click header to toggle (only if not clicking buttons)

@@ -176,6 +176,7 @@ document.addEventListener("DOMContentLoaded", function(){
     shiftBlock.style.color = getContrastColor(backgroundColor);
     shiftBlock.style.borderLeft = "4px solid " + borderColor;
     shiftBlock.style.width = totalWidth + "px";
+    shiftBlock.style.height = "43px";
     shiftBlock.style.position = "absolute";
     shiftBlock.style.left = startSlot * slotWidth + "px";
     shiftBlock.style.top = "2px";

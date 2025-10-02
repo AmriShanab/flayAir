@@ -291,7 +291,7 @@
                 <div class="input-group">
                     <label for="email">Email Address</label>
                     <i class="fas fa-envelope" style="bottom:25px;"></i>
-                    <input type="email" id="email" name="email" placeholder="example@flayAir.com" required>
+                    <input type="email" id="email" name="email" placeholder="example@Zoroval.com" required>
                 </div>
                 
                 <div class="input-group" style="position: relative;">

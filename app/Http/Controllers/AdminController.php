@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Worker;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
@@ -194,17 +195,55 @@ class AdminController extends Controller
         ]);
     }
 
-    public function viewShifts()
+    public function viewShifts(Request $request)
     {
-        $twoDaysAgo = Carbon::now()->subDays(2);
+        $query = Shift::with(['worker', 'flight']);
 
-        $shifts = Shift::with(['worker', 'flight'])
-            ->where('start_time', '>=', $twoDaysAgo)
-            ->where('shift_type', '!=', 3) // Exclude shift_type = 3 (breaks)
-            ->orderBy('start_time', 'desc')
-            ->paginate(10);
+        // Filter by worker
+        if ($request->has('worker_id') && $request->worker_id) {
+            $query->where('worker_id', $request->worker_id);
+        }
 
-        return view('admin.view_shifts', compact('shifts'));
+        // Filter by date range
+        if ($request->has('start_date') && $request->start_date) {
+            $query->whereDate('start_time', '>=', $request->start_date);
+        }
+
+        if ($request->has('end_date') && $request->end_date) {
+            $query->whereDate('start_time', '<=', $request->end_date);
+        }
+
+        // Filter by start time period
+        if ($request->has('start_time') && $request->start_time) {
+            switch ($request->start_time) {
+                case 'morning':
+                    $query->whereTime('start_time', '>=', '06:00:00')
+                        ->whereTime('start_time', '<', '12:00:00');
+                    break;
+                case 'afternoon':
+                    $query->whereTime('start_time', '>=', '12:00:00')
+                        ->whereTime('start_time', '<', '18:00:00');
+                    break;
+                case 'evening':
+                    $query->whereTime('start_time', '>=', '18:00:00')
+                        ->whereTime('start_time', '<', '24:00:00');
+                    break;
+                case 'night':
+                    $query->whereTime('start_time', '>=', '00:00:00')
+                        ->whereTime('start_time', '<', '06:00:00');
+                    break;
+            }
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $shifts = $query->orderBy('start_time', 'desc')->paginate(10);
+        $workers = Worker::orderBy('first_name')->get(); // For the worker dropdown
+
+        return view('admin.view_shifts', compact('shifts', 'workers'));
     }
 
 
@@ -413,4 +452,74 @@ class AdminController extends Controller
             'message' => 'Worker statuses updated successfully!'
         ]);
     }
+
+    public function storeUsers(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|in:user,admin,super_admin',
+        ]);
+
+        try {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+                'role_id' => 1, // Default role_id
+            ]);
+
+            return redirect()->route('admin.users')->with('success', 'User created successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error creating user: ' . $e->getMessage());
+        }
+    }
+   public function editShift($id)
+{
+    $shift = Shift::findOrFail($id);
+
+    // Show edit form view
+    return view('admin.edit-shift', compact('shift'));
+}
+
+public function updateShiftAdmin(Request $request, $id)
+{
+    $shift = Shift::findOrFail($id);
+
+    $validated = $request->validate([
+        'worker_id' => 'nullable|exists:workers,id',
+        'flight_id' => 'nullable|exists:flights,id',
+        'start_time' => 'required|date',
+        'end_time' => 'required|date|after:start_time',
+        'status' => 'required|in:scheduled,in_progress,completed,cancelled',
+    ]);
+
+    $shift->update($validated);
+     // Create notification
+        $messageText = "Your shift has been assigned/updated.";
+        Notification::create([
+            'worker_id' => $shift->worker_id,
+            'title' => 'Shift Updated',
+            'message' => $messageText,
+            'shift_start' => $shift->start_time,
+            'shift_end' => $shift->end_time,
+            'flight_id' => $shift->flight_id,
+        ]);
+
+        // Send email to worker
+        Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+    
+
+    return redirect()->route('admin.view.shifts')->with('success', 'Shift updated successfully.');
+}
+
+public function deleteShift($id)
+{
+    $shift = Shift::findOrFail($id);
+    $shift->delete();
+
+    return redirect()->route('admin.view.shifts')->with('success', 'Shift deleted successfully.');
+}
 }

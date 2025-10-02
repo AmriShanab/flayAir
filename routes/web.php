@@ -37,7 +37,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/notification/mark-read/{id}', [ShiftController::class, 'markAsRead'])->name('notification.markRead');
     Route::post('/notification/dismiss/{id}', [ShiftController::class, 'dismiss'])->name('notification.dismiss');
-
 });
 
 // Admin Routes
@@ -59,11 +58,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->prefix('admin')->
     // User Management
     Route::post('/admin/unblock/{id}', [AdminController::class, 'unblockUser'])->name('admin.unblock');
     Route::get('/users', [AdminController::class, 'listUsers'])->name('admin.users');
+    Route::post('/admin/users', [AdminController::class, 'storeUsers'])->name('admin.users.store');
 
     // Store Shifts From Shifts Page
     Route::post('/shifts/store', [AdminController::class, 'storeShiftsFromShiftsPage'])->name('admin.shifts.store');
     Route::post('/shifts/store-drag', [AdminController::class, 'storeDragDropShift'])
-    ->name('admin.shifts.store.drag');
+        ->name('admin.shifts.store.drag');
 
 
     // inside your admin group
@@ -84,6 +84,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->prefix('admin')->
     Route::get('/admin/shifts/add-break', [AdminController::class, 'addBreak'])->name('admin.shifts.add-break');
     Route::post('/admin/shifts/store-break', [AdminController::class, 'storeBreak'])->name('admin.shifts.store-break');
 
+    // Manage Shifts
+    Route::get('/edit/shift/{id}', [AdminController::class, 'editShift'])->name('admin.edit.shift');
+    Route::put('/update/shift/{id}', [AdminController::class, 'updateShiftAdmin'])->name('admin.update.shift');
+    Route::delete('/delete/shift/{id}', [AdminController::class, 'deleteShift'])->name('admin.delete.shift');
 });
 
 

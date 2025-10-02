@@ -490,7 +490,7 @@
                 </div>
                 <div class="nav-buttons">
                     <a href="{{ route('login') }}" class="btn btn-outline">Log In</a>
-                    <a href="{{ route('register.form') }}" class="btn btn-primary">Register</a>
+                    {{-- <a href="{{ route('register.form') }}" class="btn btn-primary">Register</a> --}}
                 </div>
             </div>
         </div>
@@ -503,7 +503,7 @@
                 <h1>Streamline Your Crew Scheduling</h1>
                 <p>Zoroval is the ultimate solution for managing your team's shifts, schedules, and availability. Save time, reduce errors, and keep your crew connected.</p>
                 <div class="hero-buttons">
-                    <a href="{{ route('register.form') }}" class="btn btn-primary">Get Started Free</a>
+                    <a href="{{ route('login') }}" class="btn btn-primary">Get Started Free</a>
                     <a href="#features" class="btn btn-outline">Learn More</a>
                 </div>
             </div>
@@ -594,7 +594,7 @@
             <h2 class="fade-in-up">Ready to Transform Your Crew Management?</h2>
             <p class="fade-in-up delay-1">Join thousands of aviation professionals who trust Zoroval to manage their schedules efficiently.</p>
             <div class="cta-buttons fade-in-up delay-2">
-                <a href="{{ route('register.form') }}" class="btn btn-light">Start Free Trial</a>
+                <a href="{{ route('login') }}" class="btn btn-light">Start Free Trial</a>
                 <a href="{{ route('login') }}" class="btn btn-transparent">Sign In</a>
             </div>
         </div>

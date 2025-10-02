@@ -577,27 +577,28 @@
                         <span>Manage Staffs</span>
                     </a>
                 </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('shifts.index') }}" class="nav-link {{ request()->routeIs('shifts.index') ? 'active' : '' }}">
-                        <i class="bi bi-clock-history"></i>
-                        <span>View Shift Timeline</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
+                 <li class="nav-item">
                     <a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}">
                         <i class="bi bi-people"></i>
-                        <span>View Users</span>
+                        <span>Manage Users</span>
 
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.view.shifts') }}" class="nav-link {{ request()->routeIs('shifts.index') ? 'active' : '' }}">
                         <i class="bi bi-calendar-week"></i>
-                        <span>View Shifts</span>
+                        <span>Manage Shifts</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('shifts.index') }}" class="nav-link {{ request()->routeIs('shifts.index') ? 'active' : '' }}">
+                        <i class="bi bi-clock-history"></i>
+                        <span>Shift Timeline</span>
+                    </a>
+                </li>
+
+               
                 {{-- <li class="nav-item">
                     <a href="{{ route('flights.index') }}" class="nav-link {{ request()->routeIs('flights.index') ? 'active' : '' }}">
                         <i class="bi bi-airplane-engines"></i>
