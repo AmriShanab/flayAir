@@ -96,6 +96,8 @@
 <div class="card-footer">
     {{ $workers->links('pagination::bootstrap-5') }}
 </div>
+
 @endif
+                <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:11rem;">Powered by EndevoDigital</a>
 
 @endsection

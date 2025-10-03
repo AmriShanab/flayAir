@@ -184,8 +184,12 @@
             <div class="card-footer">
                 <a href="{{ route('admin.add.flights') }}">Add New Flight</a>
             </div>
+
+           
         </div>
+        
     </div>
+     <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:3rem;">Powered by EndevoDigital</a>
 </div>
 
 <style>

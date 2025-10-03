@@ -69,14 +69,25 @@
         }
         
         .logo-icon {
-            background: var(--primary);
-            color: white;
+            /* background: var(--primary); */
+            /* color: white; */
             width: 40px;
             height: 40px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .logo-icon img{
+            width: 300px;
+            height: auto;
+        }
+
+        .logo-icon-footer img{
+            width: 200px;
+            height: auto;
+            color: white
         }
         
         .nav-buttons {
@@ -479,14 +490,9 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M9 12H7V17H9V12Z" fill="currentColor"/>
-                            <path d="M13 8H11V17H13V8Z" fill="currentColor"/>
-                            <path d="M17 14H15V17H17V14Z" fill="currentColor"/>
-                        </svg>
+                        <img src="{{ asset('images/Zoroval_logo_bg_remove.png') }}" alt="">
                     </div>
-                    <span>Zoroval</span>
+                    {{-- <span>Zoroval</span> --}}
                 </div>
                 <div class="nav-buttons">
                     <a href="{{ route('login') }}" class="btn btn-outline">Log In</a>
@@ -503,7 +509,7 @@
                 <h1>Streamline Your Crew Scheduling</h1>
                 <p>Zoroval is the ultimate solution for managing your team's shifts, schedules, and availability. Save time, reduce errors, and keep your crew connected.</p>
                 <div class="hero-buttons">
-                    <a href="{{ route('login') }}" class="btn btn-primary">Get Started Free</a>
+                    <a href="http://endevodigital.com/" class="btn btn-primary">Powered by Endevo Digital</a>
                     <a href="#features" class="btn btn-outline">Learn More</a>
                 </div>
             </div>
@@ -594,7 +600,7 @@
             <h2 class="fade-in-up">Ready to Transform Your Crew Management?</h2>
             <p class="fade-in-up delay-1">Join thousands of aviation professionals who trust Zoroval to manage their schedules efficiently.</p>
             <div class="cta-buttons fade-in-up delay-2">
-                <a href="{{ route('login') }}" class="btn btn-light">Start Free Trial</a>
+                {{-- <a href="{{ route('login') }}" class="btn btn-light">Start Free Trial</a> --}}
                 <a href="{{ route('login') }}" class="btn btn-transparent">Sign In</a>
             </div>
         </div>
@@ -605,26 +611,22 @@
         <div class="container">
             <div class="footer-content">
                 <div class="logo" style="justify-content: center; margin-bottom: 1rem;">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M9 12H7V17H9V12Z" fill="currentColor"/>
-                            <path d="M13 8H11V17H13V8Z" fill="currentColor"/>
-                            <path d="M17 14H15V17H17V14Z" fill="currentColor"/>
-                        </svg>
+                    <div class="logo-icon-footer">
+                        {{-- <img src="{{ asset('images/logo_white_version-removebg-preview.png') }}" alt=""> --}}
+                        <span><a href="http://endevodigital.com/" style="text-decoration: none;">Powered by EndevoDigital</a></span>
                     </div>
-                    <span>Zoroval</span>
+                    
                 </div>
-                <p>Streamlining crew management for the aviation industry</p>
-                <div class="footer-links">
+                {{-- <p>Streamlining crew management for the aviation industry</p> --}}
+                {{-- <div class="footer-links">
                     <a href="#">About</a>
                     <a href="#">Features</a>
                     <a href="#">Pricing</a>
                     <a href="#">Contact</a>
                     <a href="#">Privacy Policy</a>
-                </div>
+                </div> --}}
                 <div class="copyright">
-                    &copy; 2023 Zoroval. All rights reserved.
+                    &copy; 2025 Zoroval. All rights reserved.
                 </div>
             </div>
         </div>

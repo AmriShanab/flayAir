@@ -152,6 +152,11 @@
             width: 24px;
             height: 24px;
         }
+
+        .zoro-logo {
+            max-width: 250px;
+            height: 55px;
+        }
     </style>
 </head>
 
@@ -161,187 +166,187 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         
         <!-- ===== Header ===== -->
-        <div class="p-6 pb-0">
-            <div class="flex justify-between items-center mb-6">
-                
-                <!-- Page Title -->
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Shift Schedule</h1>
-                    <p class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($date)->format('F j, Y') }}</p>
+     <!-- ===== Header ===== -->
+<div class="p-6 pb-0">
+    <div class="flex justify-between items-center mb-6">
+           <div class="flex items-center">
+                <img src="{{ asset('images/zoro-big-version.png') }}" 
+                     alt="Zoroval Logo" 
+                     class="zoro-logo">
+            </div>
+
+        <!-- Page Title -->
+        {{-- <div>
+            <h1 class="text-2xl font-bold text-gray-800">Shift Schedule</h1>
+            <p class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($date)->format('F j, Y') }}</p>
+        </div> --}}
+
+        <!-- Right Section: Logo, Live Clocks, and Actions -->
+        <div class="flex items-center gap-6">
+            
+            <!-- Zoroval Logo -->
+         
+            <!-- Live Clocks -->
+            <div class="flex flex-row items-end gap-2">
+                <div class="flex items-center gap-2 text-xs px-3 py-1 rounded-lg shadow bg-gradient-to-r from-blue-100 to-blue-50 border border-blue-300 text-blue-900 font-semibold">
+                    <span class="font-semibold text-blue-700">Toronto:</span>
+                    <span id="toronto-clock" class="font-mono tracking-wider text-base"></span>
+                    <span class="ml-1 text-[10px] bg-blue-200 text-blue-800 px-1.5 py-0.5 rounded">EST</span>
                 </div>
-                <!-- Live Clocks -->
-                <div class="flex flex-row items-end mr-6 ml-6 gap-2">
-                    <div class="flex items-center gap-2 text-xs px-3 py-1 rounded-lg shadow bg-gradient-to-r from-blue-100 to-blue-50 border border-blue-300 text-blue-900 font-semibold">
-                        <span class="font-semibold text-blue-700">Toronto:</span>
-                        <span id="toronto-clock" class="font-mono tracking-wider text-base"></span>
-                        <span class="ml-1 text-[10px] bg-blue-200 text-blue-800 px-1.5 py-0.5 rounded">EST</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs px-3 py-1 rounded-lg shadow bg-gradient-to-r from-gray-100 to-gray-50 border border-gray-300 text-gray-900 font-semibold">
-                        <span class="font-semibold text-gray-700">UTC:</span>
-                        <span id="utc-clock" class="font-mono tracking-wider text-base"></span>
-                        <span class="ml-1 text-[10px] bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded">UTC</span>
-                    </div>
+                <div class="flex items-center gap-2 text-xs px-3 py-1 rounded-lg shadow bg-gradient-to-r from-gray-100 to-gray-50 border border-gray-300 text-gray-900 font-semibold">
+                    <span class="font-semibold text-gray-700">UTC:</span>
+                    <span id="utc-clock" class="font-mono tracking-wider text-base"></span>
+                    <span class="ml-1 text-[10px] bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded">UTC</span>
                 </div>
-                <!-- Actions (Date nav, New Shift, Logout) -->
-                <div class="flex items-center gap-4">
+            </div>
 
-                    <!-- Date Navigation -->
-                    <div class="flex items-center border rounded-lg overflow-hidden">
-                        <button class="p-2 hover:bg-gray-100" id="prev-day">
-                            <svg xmlns="http://www.w3.org/2000/svg" 
-                                 class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" 
-                                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 
-                                         3.293a1 1 0 01-1.414 1.414l-4-4a1 1 
-                                         0 010-1.414l4-4a1 1 0 011.414 0z" 
-                                      clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                        <input type="date" id="shift-date" 
-                               class="border-0 px-4 py-2 focus:ring-2 focus:ring-blue-500" 
-                               value="{{ $date }}">
-                        <button class="p-2 hover:bg-gray-100" id="next-day">
-                            <svg xmlns="http://www.w3.org/2000/svg" 
-                                 class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" 
-                                      d="M7.293 14.707a1 1 0 010-1.414L10.586 
-                                         10 7.293 6.707a1 1 0 011.414-1.414l4 
-                                         4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" 
-                                      clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </div>
+            <!-- Actions (Date nav, New Shift, Logout) -->
+            <div class="flex items-center gap-4">
 
-                    <!-- Add Shift Button (Admin only) -->
-                    <div x-data="{ openShiftForm: false }">
-                        @auth
-                            @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
-                                <button 
-                                    @click="openShiftForm = true"
-                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg 
-                                           hover:bg-blue-700 flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" 
-                                         class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" 
-                                              d="M10 3a1 1 0 011 1v5h5a1 1 
-                                                 0 110 2h-5v5a1 1 
-                                                 0 11-2 0v-5H4a1 1 
-                                                 0 110-2h5V4a1 1 
-                                                 0 011-1z" 
-                                              clip-rule="evenodd" />
-                                    </svg>
-                                    New Shift
-                                </button>
-                            @endif
-                        @endauth
+                <!-- Date Navigation -->
+                <div class="flex items-center border rounded-lg overflow-hidden">
+                    <button class="p-2 hover:bg-gray-100" id="prev-day">
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                             class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" 
+                                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 
+                                     3.293a1 1 0 01-1.414 1.414l-4-4a1 1 
+                                     0 010-1.414l4-4a1 1 0 011.414 0z" 
+                                  clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <input type="date" id="shift-date" 
+                           class="border-0 px-4 py-2 focus:ring-2 focus:ring-blue-500" 
+                           value="{{ $date }}">
+                    <button class="p-2 hover:bg-gray-100" id="next-day">
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                             class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" 
+                                  d="M7.293 14.707a1 1 0 010-1.414L10.586 
+                                     10 7.293 6.707a1 1 0 011.414-1.414l4 
+                                     4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" 
+                                  clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
 
-                        <!-- Add Shift Modal -->
-                        <div x-show="openShiftForm" x-cloak
-                             class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                            <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
-                                
-                                <!-- Close Button -->
-                                <button @click="openShiftForm = false"
-                                        class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-                                    ✕
-                                </button>
+                <!-- Add Shift Button (Admin only) -->
+                <div x-data="{ openShiftForm: false }">
+                    @auth
+                        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
+                            <button 
+                                @click="openShiftForm = true"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-lg 
+                                       hover:bg-blue-700 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" 
+                                     class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" 
+                                          d="M10 3a1 1 0 011 1v5h5a1 1 
+                                             0 110 2h-5v5a1 1 
+                                             0 11-2 0v-5H4a1 1 
+                                             0 110-2h5V4a1 1 
+                                             0 011-1z" 
+                                          clip-rule="evenodd" />
+                                </svg>
+                                New Shift
+                            </button>
+                        @endif
+                    @endauth
 
-                                <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Shift</h2>
+                    <!-- Add Shift Modal -->
+                    <div x-show="openShiftForm" x-cloak
+                         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+                            
+                            <!-- Close Button -->
+                            <button @click="openShiftForm = false"
+                                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+                                ✕
+                            </button>
 
-                             <form method="POST" action="{{ route('admin.store.shifts.web') }}">
-                                    @csrf
-                                    <!-- Worker Select -->
-                                <input type="hidden" name="shift_type" value="1">
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Staffs</label>
-                                        <select name="worker_id" class="w-full border-gray-300 rounded-lg mt-1">
-                                            @foreach($workers as $worker)
-                                                <option value="{{ $worker->id }}">{{ $worker->full_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Shift</h2>
 
-                                    <!-- Start Time -->
-                                  <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Start Time</label>
-                                        <input type="datetime-local" id="start_time" name="start_time" 
-                                            class="w-full border-gray-300 rounded-lg mt-1">
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">End Time</label>
-                                        <input type="datetime-local" id="end_time" name="end_time" 
-                                            class="w-full border-gray-300 rounded-lg mt-1">
-                                    </div>
-
-
-                                    {{-- <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Break Start Time</label>
-                                        <input type="text" id="break_start_time" name="break_start_time" 
-                                            class="w-full border-gray-300 rounded-lg mt-1">
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Break End Time</label>
-                                        <input type="text" id="break_end_time" name="break_end_time" 
-                                            class="w-full border-gray-300 rounded-lg mt-1">
-                                    </div> --}}
-                                    
-                                    <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Flight Number</label>
-                                    <select name="flight_id" class="w-full border-gray-300 rounded-lg mt-1">
-                                        <option value="">-- Select Flight --</option>
-                                        @foreach($flights as $flight)
-                                            <option value="{{ $flight->id }}">{{ $flight->flight_number }}</option>
+                         <form method="POST" action="{{ route('admin.store.shifts.web') }}">
+                                @csrf
+                                <!-- Worker Select -->
+                            <input type="hidden" name="shift_type" value="1">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Staffs</label>
+                                    <select name="worker_id" class="w-full border-gray-300 rounded-lg mt-1">
+                                        @foreach($workers as $worker)
+                                            <option value="{{ $worker->id }}">{{ $worker->full_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
 
+                                <!-- Start Time -->
+                              <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Start Time</label>
+                                    <input type="datetime-local" id="start_time" name="start_time" 
+                                        class="w-full border-gray-300 rounded-lg mt-1">
+                                </div>
 
-                                    <!-- Notes -->
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700">Notes</label>
-                                        <textarea name="notes" rows="3" 
-                                                class="w-full border-gray-300 rounded-lg mt-1"
-                                                placeholder="Add any notes for this shift..."></textarea>
-                                    </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">End Time</label>
+                                    <input type="datetime-local" id="end_time" name="end_time" 
+                                        class="w-full border-gray-300 rounded-lg mt-1">
+                                </div>
 
-                                    <!-- Actions -->
-                                    <div class="flex justify-end gap-3">
-                                        <button type="button" 
-                                                @click="openShiftForm = false"
-                                                class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
-                                            Cancel
-                                        </button>
-                                        <button type="submit"
-                                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                            Save Shift
-                                        </button>
-                                    </div>
-                                </form>
-
+                                <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700">Flight Number</label>
+                                <select name="flight_id" class="w-full border-gray-300 rounded-lg mt-1">
+                                    <option value="">-- Select Flight --</option>
+                                    @foreach($flights as $flight)
+                                        <option value="{{ $flight->id }}">{{ $flight->flight_number }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+
+                                <!-- Notes -->
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Notes</label>
+                                    <textarea name="notes" rows="3" 
+                                            class="w-full border-gray-300 rounded-lg mt-1"
+                                            placeholder="Add any notes for this shift..."></textarea>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="flex justify-end gap-3">
+                                    <button type="button" 
+                                            @click="openShiftForm = false"
+                                            class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+                                        Cancel
+                                    </button>
+                                    <button type="submit"
+                                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                        Save Shift
+                                    </button>
+                                </div>
+                            </form>
+
                         </div>
                     </div>
-
-                    <!-- Logout Button -->
-                     @auth
-                        @php
-                            $dashboardRoute = 'dashboard'; // default
-                            if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin') {
-                                $dashboardRoute = 'admin.dashboard';
-                            }
-                        @endphp
-
-                        <a href="{{ route($dashboardRoute) }}" 
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg 
-                                hover:bg-gray-300 flex items-center gap-2">
-                            Back to Dashboard
-                        </a>
-                    @endauth
                 </div>
+
+                <!-- Dashboard Button -->
+                 @auth
+                    @php
+                        $dashboardRoute = 'dashboard'; // default
+                        if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin') {
+                            $dashboardRoute = 'admin.dashboard';
+                        }
+                    @endphp
+
+                    <a href="{{ route($dashboardRoute) }}" 
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg 
+                            hover:bg-gray-300 flex items-center gap-2">
+                        Back to Dashboard
+                    </a>
+                @endauth
             </div>
         </div>
+    </div>
+</div>
 
 
         <!-- ===== Schedule Container ===== -->

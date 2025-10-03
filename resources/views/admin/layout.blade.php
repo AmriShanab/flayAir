@@ -47,24 +47,49 @@
         
         /* Sidebar Styles */
         .sidebar {
-            min-width: 250px;
-            max-width: 250px;
-            min-height: 100vh;
-            background: var(--sidebar-bg);
-            color: white;
-            transition: all 0.3s ease;
-            position: fixed;
-            z-index: 100;
-        }
+                min-width: 250px;
+                max-width: 250px;
+                height: 100vh; /* strictly viewport height */
+                background: var(--sidebar-bg);
+                color: white;
+                position: fixed;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Scrollable middle section */
+            .sidebar .flex-grow-1 {
+                flex: 1;
+                overflow-y: auto;
+                padding: 0.5rem;
+            }
+
+            /* Optional: style the scrollbar */
+            .sidebar .flex-grow-1::-webkit-scrollbar {
+                width: 6px;
+            }
+            .sidebar .flex-grow-1::-webkit-scrollbar-thumb {
+                background-color: rgba(255, 255, 255, 0.3);
+                border-radius: 3px;
+            }
+            .sidebar .flex-grow-1::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(255, 255, 255, 0.6);
+            }
+
+
         
         .sidebar-header {
             padding: 1.5rem 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .sidebar-header h4 {
-            font-weight: 600;
-            color: white;
+        .sidebar-logo {
+            max-width: 250px;
+            height: auto;
+            filter: brightness(0) invert(1); /* Makes the logo white */
         }
         
         .sidebar .nav-link {
@@ -460,7 +485,15 @@
                 text-align: center;
             }
             
-            .sidebar-header h4, .sidebar .nav-link span, .logout-btn span {
+            .sidebar-header {
+                /* padding: 1rem 0.5rem; */
+            }
+            
+            .sidebar-logo {
+                max-width: 40px;
+            }
+            
+            .sidebar .nav-link span, .logout-btn span {
                 display: none;
             }
             
@@ -543,7 +576,8 @@
     <!-- Sidebar -->
     <nav class="sidebar d-flex flex-column">
         <div class="sidebar-header">
-            <h4>Admin Dashboard</h4>
+            <!-- Zoroval Logo -->
+            <img src="{{ asset('images/zoro-big-version.png') }}" alt="Zoroval Logo" class="sidebar-logo">
         </div>
         <div class="flex-grow-1 p-2">
             <ul class="nav flex-column mb-auto">
