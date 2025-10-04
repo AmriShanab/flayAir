@@ -329,7 +329,7 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <img src="{{ asset('images/zoro-big-version.png') }}" alt="Zoroval Logo">
+                <img src="{{ asset('images/Zorovel-Black-HQ-Big.png') }}" alt="Zoroval Logo">
             </div>
             <h2>Zoroval</h2>
             <div class="sidebar-subtitle">Crew Management</div>

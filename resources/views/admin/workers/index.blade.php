@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('page-title', 'Staffs Management')
+@section('page-title', 'Staff Management')
 
 @section('content')
 <head>
@@ -18,7 +18,7 @@
         <div class="page-header">
             {{-- <h1 class="page-title">Workers</h1> --}}
             <a href="{{ route('workers.create') }}" class="add-btn">
-                <i class="bi bi-plus-circle"></i> Add Staffs
+                <i class="bi bi-plus-circle"></i> Add Staff
             </a>
         </div>
 
@@ -33,7 +33,7 @@
         <!-- Workers Table Card -->
         <div class="card">
             <div class="card-header">
-                <span>Staffs List</span>
+                <span>Staff List</span>
             </div>
             <div class="card-body">
                 <div class="table-container">
@@ -98,6 +98,6 @@
 </div>
 
 @endif
-                <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:11rem;">Powered by EndevoDigital</a>
+                <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:11rem;">Powered by Endevo Digital</a>
 
 @endsection

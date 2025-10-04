@@ -127,7 +127,7 @@
 </head>
 
 <div class="page-header">
-    <h1 class="page-title">Shifts Management</h1>
+    <h1 class="page-title"></h1>
     <a href="{{ route('admin.add.shifts') }}" class="add-btn">
         <i class="bi bi-plus-circle"></i> Add New Shift
     </a>
@@ -135,7 +135,7 @@
 
 <div class="card">
     <div class="card-header">
-        <span><i class="bi bi-clock-history"></i> All Shifts</span>
+        <span style="color:white;"><i class="bi bi-clock-history"></i> All Shifts</span>
         <div class="d-flex align-items-center">
             <input type="text" class="form-control form-control-sm me-2" placeholder="Search shifts..." id="searchInput" style="max-width: 200px;">
             {{-- <button class="btn btn-sm btn-light" id="toggleFilterBtn">
@@ -209,7 +209,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Worker</th>
+                        <th>Staff</th>
                         <th>Date</th>
                         <th>Start</th>
                         <th>End</th>

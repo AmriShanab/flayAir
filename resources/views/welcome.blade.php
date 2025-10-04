@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Zoroval - Crew Shift Management</title>
+    <title>Zorovel - Crew Shift Management</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     <style>
@@ -130,7 +130,7 @@
             padding: 5rem 0;
             display: flex;
             align-items: center;
-            min-height: 80vh;
+            min-height: 100vh;
         }
         
         .hero-content {
@@ -481,6 +481,107 @@
         .delay-3 {
             animation-delay: 0.6s;
         }
+
+        .brand-signature {
+    background: linear-gradient(135deg, #ffffff 0%, #f4f7fc 100%);
+    border-top: 1px solid #e0e6ed;
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.brand-signature::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(0, 123, 255, 0.08), transparent 70%);
+    z-index: 0;
+}
+
+.brand-signature-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.brand-signature-logo {
+    width: 180px;
+    height: auto;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.1));
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.brand-signature-logo:hover {
+    transform: scale(1.08);
+    filter: brightness(1.1) drop-shadow(0px 6px 10px rgba(0,0,0,0.15));
+}
+
+.brand-signature-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 0.4rem;
+}
+
+.brand-signature-link {
+    color: #2563eb;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.brand-signature-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 2px;
+    background-color: #2563eb;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.brand-signature-link:hover {
+    color: #1e40af;
+}
+
+.brand-signature-link:hover::after {
+    transform: scaleX(1);
+}
+
+.brand-signature-text {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin-top: 0.3rem;
+    max-width: 500px;
+}
+
+/* Optional entrance animation */
+@keyframes fadeInSignature {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.brand-signature {
+    animation: fadeInSignature 0.6s ease;
+}
+
     </style>
 </head>
 <body>
@@ -490,7 +591,7 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-icon">
-                        <img src="{{ asset('images/Zoroval_logo_bg_remove.png') }}" alt="">
+                        <img src="{{ asset('images/Zorovel Logo - Zorovel Black Logo - Edited.png') }}" alt="">
                     </div>
                     {{-- <span>Zoroval</span> --}}
                 </div>
@@ -507,9 +608,9 @@
         <div class="container">
             <div class="hero-content fade-in-up">
                 <h1>Streamline Your Crew Scheduling</h1>
-                <p>Zoroval is the ultimate solution for managing your team's shifts, schedules, and availability. Save time, reduce errors, and keep your crew connected.</p>
+                <p>Zorovel is the ultimate solution for managing your team's shifts, schedules, and availability. Save time, reduce errors, and keep your crew connected.</p>
                 <div class="hero-buttons">
-                    <a href="http://endevodigital.com/" class="btn btn-primary">Powered by Endevo Digital</a>
+                    <a href="#" class="btn btn-primary">Get Started</a>
                     <a href="#features" class="btn btn-outline">Learn More</a>
                 </div>
             </div>
@@ -553,6 +654,25 @@
             </div>
         </div>
     </section>
+
+    <!-- Powered by Endevo Digital Section -->
+    <section class="brand-signature py-5">
+    <div class="container text-center">
+        <div class="brand-signature-content">
+            <img src="{{ asset('images/Zorovel Logo - Zorovel Black Logo - Edited.png') }}" alt="Endevo Digital Logo" class="brand-signature-logo">
+            <h5 class="brand-signature-title">
+                Powered by 
+                <a href="http://endevodigital.com/" class="brand-signature-link" target="_blank">
+                    Endevo Digital
+                </a>
+            </h5>
+            <p class="brand-signature-text">
+                Innovative digital solutions for modern businesses.
+            </p>
+        </div>
+    </div>
+</section>
+
 
     <!-- Features Section -->
     <section class="features" id="features">
@@ -598,7 +718,7 @@
     <section class="cta">
         <div class="container">
             <h2 class="fade-in-up">Ready to Transform Your Crew Management?</h2>
-            <p class="fade-in-up delay-1">Join thousands of aviation professionals who trust Zoroval to manage their schedules efficiently.</p>
+            <p class="fade-in-up delay-1">Join thousands of aviation professionals who trust Zorovel to manage their schedules efficiently.</p>
             <div class="cta-buttons fade-in-up delay-2">
                 {{-- <a href="{{ route('login') }}" class="btn btn-light">Start Free Trial</a> --}}
                 <a href="{{ route('login') }}" class="btn btn-transparent">Sign In</a>
@@ -613,7 +733,7 @@
                 <div class="logo" style="justify-content: center; margin-bottom: 1rem;">
                     <div class="logo-icon-footer">
                         {{-- <img src="{{ asset('images/logo_white_version-removebg-preview.png') }}" alt=""> --}}
-                        <span><a href="http://endevodigital.com/" style="text-decoration: none;">Powered by EndevoDigital</a></span>
+                        <span><a href="http://endevodigital.com/" style="text-decoration: none; color:white;">Powered by Endevo Digital</a></span>
                     </div>
                     
                 </div>
@@ -626,7 +746,7 @@
                     <a href="#">Privacy Policy</a>
                 </div> --}}
                 <div class="copyright">
-                    &copy; 2025 Zoroval. All rights reserved.
+                    &copy; 2025 Zorovel. All rights reserved.
                 </div>
             </div>
         </div>

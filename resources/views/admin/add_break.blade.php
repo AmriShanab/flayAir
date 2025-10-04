@@ -84,7 +84,7 @@
             </div>
             
         </div>
-            <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:15rem; padding-left: 31rem;">Powered by EndevoDigital</a>
+            <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:15rem; padding-left: 31rem;">Powered by Endevo Digital</a>
 
     </div>
 

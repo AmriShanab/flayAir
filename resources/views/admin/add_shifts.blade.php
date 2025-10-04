@@ -11,7 +11,7 @@
         <div class="page-header">
             <h1 class="page-title">Add New Shift</h1>
             <a href="{{ route('shifts.index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Shifts
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
             </a>
         </div>
 
@@ -33,7 +33,7 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Staffs <span class="text-danger">*</span></label>
                         <select name="worker_id" class="form-select @error('worker_id') is-invalid @enderror" required>
-                            <option value="">Select Staffs</option>
+                            <option value="">Select Staff</option>
                             @foreach($workers as $worker)
                                 <option value="{{ $worker->id }}" {{ old('worker_id') == $worker->id ? 'selected' : '' }}>
                                     {{ $worker->first_name }} {{ $worker->last_name }}
@@ -146,7 +146,7 @@
             </div>
         </div>
     </div>
-                <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:11rem;">Powered by EndevoDigital</a>
+                <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:11rem;">Powered by Endevo Digital</a>
 
 </div>
 

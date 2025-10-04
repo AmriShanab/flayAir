@@ -186,7 +186,7 @@
 
         .dashboard-header h4 {
             text-align: left;
-            margin-right: 32rem;
+            margin-right: 38rem;
         }
         
         .date-display {
@@ -689,7 +689,7 @@
     <nav class="sidebar d-flex flex-column">
         <div class="sidebar-header">
             <!-- Zoroval Logo -->
-            <img src="{{ asset('images/zoro-big-version.png') }}" alt="Zoroval Logo" class="sidebar-logo">
+            <img src="{{ asset('images/Zoro-HQ-Big.png') }}" alt="Zoroval Logo" class="sidebar-logo">
         </div>
         <div class="flex-grow-1 p-2">
             <ul class="nav flex-column mb-auto">
@@ -731,9 +731,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.view.shifts') }}" class="nav-link {{ request()->routeIs('shifts.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.view.shifts') }}" class="nav-link {{ request()->routeIs('admin.view.shifts') ? 'active' : '' }}">
                         <i class="bi bi-calendar-week"></i>
-                        <span>Manage Shifts</span>
+                        <span>Manage Shift</span>
                     </a>
                 </li>
 
@@ -752,7 +752,7 @@
                     </a>
                 </li> --}}
                 <li class="nav-item">
-                    <a href="{{ route('all.notifications') }}" class="nav-link {{ request()->routeIs('reports.index') ? 'active' : '' }}">
+                    <a href="{{ route('all.notifications') }}" class="nav-link {{ request()->routeIs('all.notifications') ? 'active' : '' }}">
                         <i class="bi bi-bell"></i>
                         <span>Notifications</span>
                     </a>
@@ -839,7 +839,7 @@ function updateTorontoTime() {
         hour: "numeric",
         minute: "numeric",
         second: "numeric",
-        hour12: true
+        hour12: false
     };
     const formatter = new Intl.DateTimeFormat([], options);
     document.getElementById("toronto-time").textContent = formatter.format(new Date());

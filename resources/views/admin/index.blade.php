@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('page-title')
-    <h4>Welcome To the System {{ Auth::user()->name ?? 'Admin' }}</h4>
+    <h4>Welcome Aboard {{ Auth::user()->name ?? 'Admin' }}</h4>
 @endsection
 
 @section('content')

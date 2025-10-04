@@ -1,12 +1,12 @@
 @extends('admin.layout')
 
-@section('page-title', '')
+@section('page-title', 'User Management')
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="page-header">
-            <h1 class="page-title">User Management</h1>
+            <h1 class="page-title">User Details</h1>
             <div class="header-actions">
                 <button class="btn btn-warning my-5" id="create-user-btn">
                     <i class="bi bi-person-plus"></i> Create New User

@@ -357,25 +357,28 @@
     <div class="login-container">
         <div class="brand-section">
             <div class="brand-logo">
-                <img src="{{ asset('images/zoro-big-version.png') }}" alt="Zoroval Logo">
+            <img src="{{ asset('images/Zorovel Logo - Zorovel White Logo - Edited.png') }}" alt="Zoroval Logo">
             </div>
             <h1>Welcome Back!</h1>
             <p>Manage your shifts with ease, anytime, anywhere.</p>
             
             {{-- <div class="features">
-                <div class="feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Easy shift management</span>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Real-time notifications</span>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Secure crew portal</span>
-                </div>
+            <div class="feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Easy shift management</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Real-time notifications</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Secure crew portal</span>
+            </div>
             </div> --}}
+            <span style="display:block; margin-top:220px;">
+            <a href="http://endevodigital.com/" style="text-decoration:none; color:white;">Powered by Endevo Digital</a>
+            </span>
         </div>
         
         <div class="form-section">

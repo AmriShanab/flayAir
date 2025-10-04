@@ -57,6 +57,6 @@
     {{-- 8 --}}
 
 </div>
-                    <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; margin-top:25rem; margin-left:32rem;">Powered by EndevoDigital</a>
+                    <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; margin-top:35rem !important; margin-left:32rem;">Powered by Endevo Digital</a>
 
 @endsection
