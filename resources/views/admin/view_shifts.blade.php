@@ -287,7 +287,7 @@
     </div>
 
 </div>
-                    <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; margin-top:25rem; padding-left:31rem;">Powered by EndevoDigital</a>
+                    {{-- <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; margin-top:500rem; padding-left:31rem;">Powered by EndevoDigital</a> --}}
 
 <!-- Bootstrap 5 JS Bundle CDN -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

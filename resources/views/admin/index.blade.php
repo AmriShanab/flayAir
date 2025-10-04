@@ -48,7 +48,7 @@
     <!-- Recent Workers -->
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="card">
-            <div class="card-header">
+            <div class="workers-card-header">
                 <span>Today Staffs</span>
                 <i class="bi bi-people"></i>
             </div>
@@ -82,7 +82,7 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="workers-card-footer">
                 <a href="{{ route('workers.index') }}">View All Staffs</a>
             </div>
         </div>
@@ -91,7 +91,7 @@
     <!-- Recent Shifts -->
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="card">
-            <div class="card-header">
+            <div class="shifts-card-header">
                 <span>Recent Shifts</span>
                 <i class="bi bi-calendar-week"></i>
             </div>
@@ -131,7 +131,7 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="shifts-card-footer">
                 <a href="{{ route('admin.add.shifts') }}">Add New Shift</a>
             </div>
         </div>
@@ -140,7 +140,7 @@
     <!-- Recent Flights -->
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="card">
-            <div class="card-header">
+            <div class="flights-card-header">
                 <span>Today Flights</span>
                 <i class="bi bi-airplane"></i>
             </div>
@@ -181,7 +181,7 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer">
+            <div class="flights-card-footer">
                 <a href="{{ route('admin.add.flights') }}">Add New Flight</a>
             </div>
 

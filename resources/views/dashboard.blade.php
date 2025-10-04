@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f5f7fa; color: #333; display: flex; min-height: 100vh; }
+        body { background-color: #f5f7fa; color: #333; display: flex; min-height: 100vh; flex-direction: column; }
 
         /* Enhanced Sidebar */
         .sidebar { 
@@ -165,7 +165,20 @@
         }
 
         /* Main Content */
-        .main-content { flex: 1; margin-left: 260px; padding: 30px; }
+       .main-content { 
+    display: flex; 
+    flex-direction: column; 
+    min-height: 100vh; 
+    margin-left: 260px; 
+    transition: margin-left 0.3s ease;
+    background-color: #f5f7fa;
+}
+        
+        .content-wrapper {
+    flex: 1;
+    padding: 30px;
+}
+        
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e6ed; }
         .user-welcome h1 { color: #0a2e6f; font-size: 28px; margin-bottom: 5px; }
         .user-welcome p { color: #666; font-size: 16px; }
@@ -207,6 +220,66 @@
         .logout-btn { background: transparent; color: #dc3545; border: 1px solid #dc3545; padding: 12px 25px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s; }
         .logout-btn:hover { background: #dc3545; color: white; }
 
+       /* Footer Styles (Fixed Properly) */
+    .footer {
+        background: linear-gradient(135deg, #0a2e6f 0%, #1a56db 100%);
+        color: white;
+        padding: 20px 30px;
+        text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        width: 100%;
+        margin-left: 0;
+        position: relative;
+        margin-bottom: -1.3rem;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+    }
+
+    .footer-link {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        padding: 8px 16px;
+        border-radius: 6px;
+        background: rgba(255,255,255,0.1);
+    }
+
+    .footer-link:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .footer-icon {
+        font-size: 16px;
+    }
+
+    .footer-brand {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    /* Responsive Fix */
+    @media (max-width: 992px) {
+        .main-content { margin-left: 80px; }
+        .footer { margin-left: 80px; }
+    }
+
+    @media (max-width: 768px) {
+        .main-content { margin-left: 0; }
+        .footer { margin-left: 0; padding: 15px 20px; }
+        .footer-content { flex-direction: column; gap: 8px; }
+    }
+
         /* Responsive */
         @media (max-width: 992px) {
             .sidebar { width: 80px; }
@@ -216,6 +289,7 @@
             .menu-item { justify-content: center; padding: 20px; margin: 2px 5px; }
             .menu-item i { margin-right: 0; font-size: 22px; }
             .main-content { margin-left: 80px; }
+            .footer { margin-left: 80px; }
         }
         
         @media (max-width: 768px) {
@@ -224,6 +298,8 @@
             .sidebar.active { transform: translateX(0); }
             .header { flex-direction: column; align-items: flex-start; }
             .user-info { margin-top: 15px; }
+            .footer { margin-left: 0; padding: 15px 20px; }
+            .footer-content { flex-direction: column; gap: 8px; }
             .menu-toggle { 
                 display: block; 
                 position: fixed; 
@@ -244,6 +320,8 @@
         }
 
         .sidebar-menu a { text-decoration: none; color: #fff; }
+
+        
     </style>
 </head>
 <body>
@@ -280,44 +358,57 @@
         </div>
     </div>
 
-    <!-- Main -->
+    <!-- Main Content -->
     <div class="main-content">
-        <div class="header">
-            <div class="user-welcome">
-                <h1>Welcome, {{ auth()->user()->name }}! 🎉</h1>
-                <p>You are logged in successfully. Here's your schedule for today.</p>
-            </div>
-            <div class="user-info">
-                <div class="user-avatar">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+        <div class="content-wrapper">
+            <div class="header">
+                <div class="user-welcome">
+                    <h1>Welcome, {{ auth()->user()->name }}! 🎉</h1>
+                    <p>You are logged in successfully. Here's your schedule for today.</p>
                 </div>
-                <div>
-                    <div style="font-weight: 500;">
-                        {{ auth()->user()->name }}
+                <div class="user-info">
+                    <div class="user-avatar">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                     </div>
-                    <div style="font-size: 13px; color: #666;">
-                        {{ auth()->user()->position ?? auth()->user()->role }}
+                    <div>
+                        <div style="font-weight: 500;">
+                            {{ auth()->user()->name }}
+                        </div>
+                        <div style="font-size: 13px; color: #666;">
+                            {{ auth()->user()->position ?? auth()->user()->role }}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Quick Actions -->
-        <div class="section-header"><div class="section-title">Quick Actions</div></div>
-        <div class="quick-actions">
-            <a href="{{ route('shifts.index') }}" class="action-btn">
-                <div class="action-icon"><i class="fas fa-calendar-alt"></i></div>
-                <div class="action-text">View Shifts</div>
-            </a>
-        </div>
+            <!-- Quick Actions -->
+            <div class="section-header"><div class="section-title">Quick Actions</div></div>
+            <div class="quick-actions">
+                <a href="{{ route('shifts.index') }}" class="action-btn">
+                    <div class="action-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="action-text">View Shifts</div>
+                </a>
+            </div>
 
-        <!-- Logout -->
-        <div class="logout-form">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </form>
+            <!-- Logout -->
+            <div class="logout-form">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </div>
         </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <a href="http://endevodigital.com/" target="_blank" class="footer-link">
+                    <i class="fas fa-external-link-alt footer-icon"></i>
+                    <span>Powered by</span>
+                    <span class="footer-brand">EndevoDigital</span>
+                </a>
+            </div>
+        </footer>
     </div>
 
     <script>

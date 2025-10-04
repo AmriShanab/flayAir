@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="table-container">
-    <table class="table">
+    <table class="table my-5">
         <thead>
             <tr>
                 <th>ID</th>
@@ -55,5 +55,8 @@
         </tbody>
     </table>
     {{-- 8 --}}
+
 </div>
+                    <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; margin-top:25rem; margin-left:32rem;">Powered by EndevoDigital</a>
+
 @endsection

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f5f7fa; color: #333; display: flex; min-height: 100vh; }
+        body { background-color: #f5f7fa; color: #333; display: flex; min-height: 100vh; flex-direction: column; }
 
         /* Enhanced Sidebar */
         .sidebar { 
@@ -166,10 +166,25 @@
         }
 
         /* Main Content */
-        .main-content { flex: 1; margin-left: 260px; padding: 30px; }
+        .main-content { 
+            flex: 1; 
+            margin-left: 200px; 
+            padding: 30px; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+        }
+
+        .content-wrapper {
+            flex: 1;
+        }
 
         /* Notifications */
-        .notifications-container { max-width: 1000px; margin: 0 auto; }
+        .notifications-container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            flex: 1;
+        }
 
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e6ed; }
         .page-title { font-size: 28px; font-weight: 600; color: #0a2e6f; }
@@ -226,6 +241,63 @@
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideDown { from {transform: translateY(-20px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
 
+        /* Footer Styles - Fixed for Full Width */
+        .footer {
+            background: linear-gradient(135deg, #0a2e6f 0%, #1a56db 100%);
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            /* margin-left: 260px; */
+            position: relative;
+            left: 0;
+            right: 0;
+            margin-top: 2rem;
+            margin-bottom: -3rem;
+        }
+
+        .footer {
+    width: 100%;
+    margin-left: 30px;
+}
+
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .footer-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .footer-icon {
+            font-size: 16px;
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .sidebar { width: 80px; }
@@ -235,6 +307,10 @@
             .menu-item { justify-content: center; padding: 20px; margin: 2px 5px; }
             .menu-item i { margin-right: 0; font-size: 22px; }
             .main-content { margin-left: 80px; }
+            .footer { 
+                width: calc(100% - 80px);
+                margin-left: 80px;
+            }
         }
         
         @media (max-width: 768px) {
@@ -243,6 +319,12 @@
             .sidebar.active { transform: translateX(0); }
             .header { flex-direction: column; align-items: flex-start; }
             .user-info { margin-top: 15px; }
+            .footer { 
+                width: 100%;
+                margin-left: 0;
+                padding: 15px 20px;
+            }
+            .footer-content { flex-direction: column; gap: 8px; }
             .menu-toggle { 
                 display: block; 
                 position: fixed; 
@@ -307,77 +389,90 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="notifications-container">
-            <div class="page-header">
-                <h1 class="page-title">Your Notifications</h1>
-                <div class="notification-actions">
-                    <button class="action-btn mark-all-read">
-                        <i class="fas fa-check-double"></i> Mark all as read
-                    </button>
-                    <button class="action-btn clear-all">
-                        <i class="fas fa-trash"></i> Clear all
-                    </button>
+        <div class="content-wrapper">
+            <div class="notifications-container">
+                <div class="page-header">
+                    <h1 class="page-title">Your Notifications</h1>
+                    <div class="notification-actions">
+                        <button class="action-btn mark-all-read">
+                            <i class="fas fa-check-double"></i> Mark all as read
+                        </button>
+                        <button class="action-btn clear-all">
+                            <i class="fas fa-trash"></i> Clear all
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="notification-list">
-                @forelse($notifications as $notification)
-                    <div class="notification-item {{ !$notification->read_at ? 'unread' : '' }}">
-                        <div class="notification-icon">
-                            @if(str_contains(strtolower($notification->title), 'shift'))
-                                <i class="fas fa-calendar-alt"></i>
-                            @elseif(str_contains(strtolower($notification->title), 'alert') || str_contains(strtolower($notification->title), 'important'))
-                                <i class="fas fa-exclamation-circle"></i>
-                            @elseif(str_contains(strtolower($notification->title), 'flight'))
-                                <i class="fas fa-plane"></i>
-                            @else
-                                <i class="fas fa-bell"></i>
-                            @endif
-                        </div>
-                        <div class="notification-content">
-                            <h3 class="notification-title">{{ $notification->title }}</h3>
-                            <p class="notification-message">{{ $notification->message }}</p>
-                            <div class="notification-time">
-                                <i class="far fa-clock"></i> {{ $notification->created_at->diffForHumans() }}
-                            </div>
-                            <div class="notification-actions-item">
-                                <button class="btn-small btn-view"
-                                        data-id="{{ $notification->id }}"
-                                        data-title="{{ $notification->title }}"
-                                        data-message="{{ $notification->message }}"
-                                        data-shift-start="{{ $notification->shift_start ? $notification->shift_start->format('F j, Y, g:i a') : 'N/A' }}"
-                                        data-shift-end="{{ $notification->shift_end ? $notification->shift_end->format('F j, Y, g:i a') : 'N/A' }}"
-                                        data-flight="{{ $notification->flight ? $notification->flight->flight_number : 'N/A' }}">
-                                    <i class="fas fa-eye"></i> View Details
-                                </button>
-
-                                <button class="btn-small btn-dismiss" data-id="{{ $notification->id }}">
-                                    <i class="fas fa-times"></i> Dismiss
-                                </button>
-
-                                @if($notification->is_read == 0 || $notification->is_read == 1)
-                                    <button class="btn-small btn-ack" data-id="{{ $notification->id }}">
-                                        <i class="fas fa-check-circle"></i> Accept
-                                    </button>
-                                @elseif($notification->is_read == 2)
-                                    <span class="ack-status">
-                                        <i class="fas fa-check-circle"></i> Accepted
-                                    </span>
+                <div class="notification-list">
+                    @forelse($notifications as $notification)
+                        <div class="notification-item {{ !$notification->read_at ? 'unread' : '' }}">
+                            <div class="notification-icon">
+                                @if(str_contains(strtolower($notification->title), 'shift'))
+                                    <i class="fas fa-calendar-alt"></i>
+                                @elseif(str_contains(strtolower($notification->title), 'alert') || str_contains(strtolower($notification->title), 'important'))
+                                    <i class="fas fa-exclamation-circle"></i>
+                                @elseif(str_contains(strtolower($notification->title), 'flight'))
+                                    <i class="fas fa-plane"></i>
+                                @else
+                                    <i class="fas fa-bell"></i>
                                 @endif
                             </div>
+                            <div class="notification-content">
+                                <h3 class="notification-title">{{ $notification->title }}</h3>
+                                <p class="notification-message">{{ $notification->message }}</p>
+                                <div class="notification-time">
+                                    <i class="far fa-clock"></i> {{ $notification->created_at->diffForHumans() }}
+                                </div>
+                                <div class="notification-actions-item">
+                                    <button class="btn-small btn-view"
+                                            data-id="{{ $notification->id }}"
+                                            data-title="{{ $notification->title }}"
+                                            data-message="{{ $notification->message }}"
+                                            data-shift-start="{{ $notification->shift_start ? $notification->shift_start->format('F j, Y, g:i a') : 'N/A' }}"
+                                            data-shift-end="{{ $notification->shift_end ? $notification->shift_end->format('F j, Y, g:i a') : 'N/A' }}"
+                                            data-flight="{{ $notification->flight ? $notification->flight->flight_number : 'N/A' }}">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </button>
+
+                                    <button class="btn-small btn-dismiss" data-id="{{ $notification->id }}">
+                                        <i class="fas fa-times"></i> Dismiss
+                                    </button>
+
+                                    @if($notification->is_read == 0 || $notification->is_read == 1)
+                                        <button class="btn-small btn-ack" data-id="{{ $notification->id }}">
+                                            <i class="fas fa-check-circle"></i> Accept
+                                        </button>
+                                    @elseif($notification->is_read == 2)
+                                        <span class="ack-status">
+                                            <i class="fas fa-check-circle"></i> Accepted
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @empty
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="far fa-bell-slash"></i>
+                    @empty
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="far fa-bell-slash"></i>
+                            </div>
+                            <div class="empty-text">You have no notifications</div>
+                            <p>When you have new notifications, they'll appear here</p>
                         </div>
-                        <div class="empty-text">You have no notifications</div>
-                        <p>When you have new notifications, they'll appear here</p>
-                    </div>
-                @endforelse
+                    @endforelse
+                </div>
             </div>
         </div>
+        
+        <!-- Full Width Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <a href="http://endevodigital.com/" target="_blank" class="footer-link">
+                    <i class="fas fa-external-link-alt footer-icon"></i>
+                    <span>Powered by</span>
+                    <span class="footer-brand">EndevoDigital</span>
+                </a>
+            </div>
+        </footer>
     </div>
 
     <!-- Enhanced Notification Details Modal -->
@@ -549,7 +644,7 @@
                 color: 'white', 
                 padding: '12px 24px', 
                 borderRadius: '8px', 
-                boxShadow: '0 4px 12px rgba(0,0,0,0.15)', 
+                box-shadow: '0 4px 12px rgba(0,0,0,0.15)', 
                 zIndex: '1000',
                 fontSize: '14px',
                 fontWeight: '500'

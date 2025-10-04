@@ -32,7 +32,10 @@ class AdminController extends Controller
             ->get();
 
         // Statistics for the dashboard cards
-        $totalWorkers = Worker::count();
+        // Count of workers who have shifts today
+        $totalWorkers = Worker::whereHas('shifts', function ($query) {
+            $query->whereDate('start_time', today());
+        })->count();
         $totalShifts = Shift::whereBetween('start_time', [
             now()->startOfWeek(),
             now()->endOfWeek()

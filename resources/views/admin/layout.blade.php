@@ -44,6 +44,32 @@
             color: var(--dark-text);
             min-height: 100vh;
         }
+
+         /* Footer Styles */
+        .footer {
+            background-color: var(--sidebar-bg);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-logo {
+            height: 20px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+        
+        /* Main content wrapper */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+        }
         
         /* Sidebar Styles */
         .sidebar {
@@ -157,6 +183,11 @@
             color: var(--dark-text);
             margin: 0;
         }
+
+        .dashboard-header h4 {
+            text-align: left;
+            margin-right: 32rem;
+        }
         
         .date-display {
             color: var(--mid-text);
@@ -187,6 +218,42 @@
             align-items: center;
             justify-content: space-between;
         }
+
+        .flights-card-header {
+            background: linear-gradient(90deg, var(--warning), #d97706);
+            color: white;
+            border-radius: 0.75rem 0.75rem 0 0 !important;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .shifts-card-header {
+            background: linear-gradient(90deg, var(--success), #047857);
+            color: white;
+            border-radius: 0.75rem 0.75rem 0 0 !important;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .workers-card-header {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 0.75rem 0.75rem 0 0 !important;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
         
         .card-header i {
             font-size: 1.25rem;
@@ -202,6 +269,51 @@
             padding: 1rem 1.5rem;
             border-radius: 0 0 0.75rem 0.75rem !important;
             text-align: center;
+        }
+
+        .flights-card-footer {
+            background-color: white;
+            border-top: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            border-radius: 0 0 0.75rem 0.75rem !important;
+            text-align: center;
+        }
+
+        .flights-card-footer a {
+            color: var(--warning);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .shifts-card-footer {
+            background-color: white;
+            border-top: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            border-radius: 0 0 0.75rem 0.75rem !important;
+            text-align: center;
+        }
+
+        .shifts-card-footer a {
+            color: var(--success);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .workers-card-footer {
+            background-color: white;
+            border-top: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            border-radius: 0 0 0.75rem 0.75rem !important;
+            text-align: center;
+        }
+
+        .workers-card-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
         }
         
         .card-footer a {
@@ -692,7 +804,11 @@
         <!-- Page Content -->
         @yield('content')
     </div>
+    
 </div>
+
+<!-- Footer -->
+
 
 <!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
