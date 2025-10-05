@@ -24,7 +24,7 @@ class ShiftNotificationMail extends Mailable
     public function build()
     {
         return $this->subject('Shift Update Notification')
-                    ->cc('manager@example.com')
+                    ->cc('Ahamadarham3903@gmail.com')
                     ->view('emails.shift-notification')
                     ->with([
                         'shift' => $this->shift,
