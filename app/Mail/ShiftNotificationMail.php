@@ -12,16 +12,19 @@ class ShiftNotificationMail extends Mailable
 
     public $shift;
     public $messageText;
+    public $ccEmail;
 
     public function __construct($shift, $messageText)
     {
         $this->shift = $shift;
         $this->messageText = $messageText;
+        
     }
 
     public function build()
     {
         return $this->subject('Shift Update Notification')
+                    ->cc('manager@example.com')
                     ->view('emails.shift-notification')
                     ->with([
                         'shift' => $this->shift,
