@@ -48,7 +48,7 @@
     </div>
 
     <div class="col-12">
-        <button type="submit" class="btn btn-success">{{ isset($worker) ? 'Update' : 'Add' }} Worker</button>
+        <button type="submit" class="btn btn-success">{{ isset($worker) ? 'Update' : 'Add' }} Staff</button>
     </div>
 </form>
 @endsection

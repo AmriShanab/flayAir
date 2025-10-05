@@ -24,51 +24,19 @@
         
         /* Enhanced Sidebar Header */
         .sidebar-header { 
-            padding: 25px 20px; 
+            padding: 1px 20px; 
             text-align: center; 
-            border-bottom: 1px solid rgba(255,255,255,0.15); 
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
         }
         
         /* Enhanced Logo Container */
         .sidebar-logo { 
-            width: 140px; 
-            height: 140px; 
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
-            border-radius: 50%; 
+            width: 220px; 
+            height: 160px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            margin: 0 auto 20px; 
-            padding: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            border: 3px solid rgba(255,255,255,0.3);
-            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
-        }
-        
-        .sidebar-logo::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
-        }
-        
-        .sidebar-logo:hover::before {
-            transform: rotate(45deg) translate(50%, 50%);
-        }
-        
-        .sidebar-logo:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
-            border-color: rgba(255,255,255,0.5);
         }
         
         .sidebar-logo img { 
@@ -168,7 +136,7 @@
         /* Main Content */
         .main-content { 
             flex: 1; 
-            margin-left: 200px; 
+            margin-left: 260px; 
             padding: 30px; 
             display: flex; 
             flex-direction: column; 
@@ -241,27 +209,17 @@
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideDown { from {transform: translateY(-20px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
 
-        /* Footer Styles - Fixed for Full Width */
+        /* Footer Styles */
         .footer {
             background: linear-gradient(135deg, #0a2e6f 0%, #1a56db 100%);
             color: white;
             padding: 20px 30px;
             text-align: center;
             border-top: 1px solid rgba(255,255,255,0.1);
-            width: 100%;
-            /* margin-left: 260px; */
-            position: relative;
-            left: 0;
-            right: 0;
-            margin-top: 2rem;
-            margin-bottom: -3rem;
+            width: calc(100% - 260px);
+            margin-left: 260px;
+            margin-top: auto;
         }
-
-        .footer {
-    width: 100%;
-    margin-left: 30px;
-}
-
 
         .footer-content {
             display: flex;
@@ -317,8 +275,6 @@
             .main-content { margin-left: 0; padding: 20px; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .header { flex-direction: column; align-items: flex-start; }
-            .user-info { margin-top: 15px; }
             .footer { 
                 width: 100%;
                 margin-left: 0;
@@ -355,6 +311,20 @@
         }
 
         .sidebar-menu a { text-decoration: none; color: #fff; }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: opacity 0.5s;
+        }
     </style>
 </head>
 
@@ -363,10 +333,8 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <img src="{{ asset('images/Zorovel-Black-HQ-Big.png') }}" alt="Zoroval Logo">
+                <img src="{{ asset('images/Zoro-HQ-Big.png') }}" alt="Zoroval Logo">
             </div>
-            <h2>Zoroval</h2>
-            <div class="sidebar-subtitle">Crew Management</div>
         </div>
         
         <div class="sidebar-menu">
@@ -405,7 +373,7 @@
 
                 <div class="notification-list">
                     @forelse($notifications as $notification)
-                        <div class="notification-item {{ !$notification->read_at ? 'unread' : '' }}">
+                        <div class="notification-item {{ !$notification->read_at ? 'unread' : '' }}" data-id="{{ $notification->id }}">
                             <div class="notification-icon">
                                 @if(str_contains(strtolower($notification->title), 'shift'))
                                     <i class="fas fa-calendar-alt"></i>
@@ -463,7 +431,7 @@
             </div>
         </div>
         
-        <!-- Full Width Footer -->
+        <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
                 <a href="http://endevodigital.com/" target="_blank" class="footer-link">
@@ -506,10 +474,14 @@
         const modalMessage = document.getElementById('modalMessage');
         const modalClose = document.querySelector('.modal-close');
 
-        // View Details
+        // CSRF Token for AJAX requests
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+
+        // View Details Button
         document.querySelectorAll('.btn-view').forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.dataset.id;
+                const notificationItem = this.closest('.notification-item');
 
                 // Fill modal content
                 modalTitle.textContent = this.dataset.title;
@@ -521,143 +493,273 @@
                 // Show modal
                 modal.style.display = 'block';
 
-                // Mark as read + acknowledged
-                fetch(`/notification/mark-read/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if(data.success) {
-                        this.closest('.notification-item').classList.remove('unread');
-                    }
-                })
-                .catch(err => console.error(err));
+                // Mark as read
+                markAsRead(id, notificationItem);
             });
         });
 
-        // Acknowledge notification
+        // Acknowledge Button
         document.querySelectorAll('.btn-ack').forEach(btn => {
             btn.addEventListener('click', function() {
                 const id = this.dataset.id;
                 const button = this;
+                const notificationItem = this.closest('.notification-item');
 
-                fetch(`/notification/acknowledge/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if(data.success) {
-                        // Replace button with "Accepted" text
-                        button.outerHTML = '<span class="ack-status"><i class="fas fa-check-circle"></i> Accepted</span>';
-                    }
-                })
-                .catch(err => console.error(err));
+                acknowledgeNotification(id, button, notificationItem);
             });
         });
 
-        // Dismiss notification
+        // Dismiss Button
         document.querySelectorAll('.btn-dismiss').forEach(btn => {
             btn.addEventListener('click', function() {
                 const id = this.dataset.id;
-                const item = this.closest('.notification-item');
+                const notificationItem = this.closest('.notification-item');
 
-                fetch(`/notification/dismiss/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update UI or remove item
-                        item.style.opacity = '0';
-                        setTimeout(() => item.remove(), 300);
-                    }
-                })
-                .catch(err => console.error(err));
+                dismissNotification(id, notificationItem);
             });
         });
 
-        // Close Modal
-        modalClose.addEventListener('click', () => modal.style.display = 'none');
-        window.addEventListener('click', e => { 
-            if(e.target === modal) modal.style.display = 'none'; 
+        // Mark All as Read Button
+        document.querySelector('.mark-all-read')?.addEventListener('click', function() {
+            markAllAsRead();
         });
 
-        // Mobile toggle
+        // Clear All Button
+        document.querySelector('.clear-all')?.addEventListener('click', function() {
+            clearAllNotifications();
+        });
+
+        // Close Modal
+        modalClose.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Mobile Menu Toggle
         const menuToggle = document.createElement('div');
         menuToggle.className = 'menu-toggle';
         menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
         document.body.appendChild(menuToggle);
+        
         const sidebar = document.querySelector('.sidebar');
-        menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
-
-        // Mark all as read
-        document.querySelector('.mark-all-read')?.addEventListener('click', function() {
-            document.querySelectorAll('.notification-item').forEach(item => item.classList.remove('unread'));
-            showToast('All notifications marked as read', '#10b981');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
         });
 
-        // Clear all
-        document.querySelector('.clear-all')?.addEventListener('click', function() {
-            if(confirm('Are you sure you want to clear all notifications?')) {
-                document.querySelector('.notification-list').innerHTML = `
+        // Function to mark notification as read
+        function markAsRead(id, notificationItem) {
+            fetch(`/notification/mark-read/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    notificationItem.classList.remove('unread');
+                    showToast('Notification marked as read', '#10b981');
+                }
+            })
+            .catch(error => {
+                console.error('Error marking as read:', error);
+                showToast('Error marking notification as read', '#dc3545');
+            });
+        }
+
+        // Function to acknowledge notification
+        function acknowledgeNotification(id, button, notificationItem) {
+            fetch(`/notification/acknowledge/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Replace button with "Accepted" status
+                    button.outerHTML = '<span class="ack-status"><i class="fas fa-check-circle"></i> Accepted</span>';
+                    showToast('Notification accepted', '#10b981');
+                }
+            })
+            .catch(error => {
+                console.error('Error acknowledging notification:', error);
+                showToast('Error accepting notification', '#dc3545');
+            });
+        }
+
+        // Function to dismiss notification
+        function dismissNotification(id, notificationItem) {
+            fetch(`/notification/dismiss/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Animate and remove notification item
+                    notificationItem.style.opacity = '0';
+                    notificationItem.style.transform = 'translateX(-100%)';
+                    setTimeout(() => {
+                        notificationItem.remove();
+                        checkEmptyState();
+                    }, 300);
+                    showToast('Notification dismissed', '#3B82F6');
+                }
+            })
+            .catch(error => {
+                console.error('Error dismissing notification:', error);
+                showToast('Error dismissing notification', '#dc3545');
+            });
+        }
+
+        // Function to mark all as read
+        function markAllAsRead() {
+            fetch('/notification/mark-all-read', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Remove unread class from all notifications
+                    document.querySelectorAll('.notification-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                    showToast('All notifications marked as read', '#10b981');
+                }
+            })
+            .catch(error => {
+                console.error('Error marking all as read:', error);
+                showToast('Error marking all as read', '#dc3545');
+            });
+        }
+
+        // Function to clear all notifications
+        function clearAllNotifications() {
+            if (confirm('Are you sure you want to clear all notifications?')) {
+                fetch('/notification/clear-all', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Clear notification list
+                        document.querySelector('.notification-list').innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-icon"><i class="far fa-bell-slash"></i></div>
+                                <div class="empty-text">You have no notifications</div>
+                                <p>When you have new notifications, they'll appear here</p>
+                            </div>`;
+                        showToast('All notifications cleared', '#3B82F6');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error clearing all notifications:', error);
+                    showToast('Error clearing notifications', '#dc3545');
+                });
+            }
+        }
+
+        // Function to check if notification list is empty and show empty state
+        function checkEmptyState() {
+            const notificationList = document.querySelector('.notification-list');
+            const notificationItems = notificationList.querySelectorAll('.notification-item');
+            
+            if (notificationItems.length === 0) {
+                notificationList.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon"><i class="far fa-bell-slash"></i></div>
                         <div class="empty-text">You have no notifications</div>
                         <p>When you have new notifications, they'll appear here</p>
                     </div>`;
-                showToast('All notifications cleared', '#3B82F6');
             }
-        });
+        }
 
-        // Button click effect
-        document.querySelectorAll('.btn-small').forEach(button => {
-            button.addEventListener('click', function() {
-                this.style.transform = 'scale(0.98)';
-                setTimeout(() => this.style.transform = '', 150);
-            });
-        });
-
-        // Toast notification function
+        // Function to show toast notifications
         function showToast(message, color) {
+            // Remove existing toast
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
             const toast = document.createElement('div');
+            toast.className = 'toast';
             toast.textContent = message;
-            Object.assign(toast.style, { 
-                position: 'fixed', 
-                bottom: '20px', 
-                right: '20px', 
-                backgroundColor: color, 
-                color: 'white', 
-                padding: '12px 24px', 
-                borderRadius: '8px', 
-                box-shadow: '0 4px 12px rgba(0,0,0,0.15)', 
-                zIndex: '1000',
-                fontSize: '14px',
-                fontWeight: '500'
-            });
+            toast.style.backgroundColor = color;
+            
             document.body.appendChild(toast);
-            setTimeout(() => { 
-                toast.style.opacity = '0'; 
-                toast.style.transition = 'opacity 0.5s'; 
-                setTimeout(() => toast.remove(), 500); 
+
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 500);
             }, 3000);
         }
+
+        // Button click effects
+        document.querySelectorAll('.btn-small').forEach(button => {
+            button.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
     });
     </script>
-
 </body>
 @endsection

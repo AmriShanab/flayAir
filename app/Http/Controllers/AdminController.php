@@ -134,33 +134,73 @@ class AdminController extends Controller
             'start_time' => 'required|date',
             'end_time'   => 'required|date|after:start_time',
             'notes'      => 'nullable|string',
-            'flight_id'  => 'nullable|exists:flights,id', // changed from required → nullable
+            'flight_id'  => 'nullable|exists:flights,id',
             'shift_type' => 'required|integer',
         ]);
 
-        // Normalize times (ensure proper DB datetime format)
-        $validated['start_time'] = \Carbon\Carbon::parse($validated['start_time']);
-        $validated['end_time']   = \Carbon\Carbon::parse($validated['end_time']);
+        $start = \Carbon\Carbon::parse($validated['start_time']);
+        $end   = \Carbon\Carbon::parse($validated['end_time']);
 
-        // Create the shift
-        $shift = Shift::create($validated);
+        // If the shift crosses midnight
+        if ($start->isSameDay($end) === false) {
+            $notes = "This is an overnight shift" . $start . " to " . $end;
+            $validated['notes'] = $notes;
+            // First shift: from start to 23:59 of start day
+            $firstShift = Shift::create([
+                'worker_id'  => $validated['worker_id'],
+                'start_time' => $start,
+                'end_time'   => $start->copy()->endOfDay(), // 23:59:59
+                'notes'      => $validated['notes'] ?? null,
+                'flight_id'  => $validated['flight_id'] ?? null,
+                'shift_type' => $validated['shift_type'],
+            ]);
 
-        // Create notification
-        $messageText = "Your shift has been assigned/updated.";
-        Notification::create([
-            'worker_id'   => $shift->worker_id,
-            'title'       => 'Shift Updated',
-            'message'     => $messageText,
-            'shift_start' => $shift->start_time,
-            'shift_end'   => $shift->end_time,
-            'flight_id'   => $shift->flight_id,
-        ]);
+            // Second shift: from 00:00 of next day to original end time
+            $secondShift = Shift::create([
+                'worker_id'  => $validated['worker_id'],
+                'start_time' => $end->copy()->startOfDay(), // 00:00
+                'end_time'   => $end,
+                'notes'      => $validated['notes'] ?? null,
+                'flight_id'  => $validated['flight_id'] ?? null,
+                'shift_type' => $validated['shift_type'],
+            ]);
 
-        // Send email to worker
-        Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+            // Notify worker for both shifts
+            $messageText = "Your shift has been assigned and split into two parts.";
+            foreach ([$firstShift, $secondShift] as $shift) {
+                Notification::create([
+                    'worker_id'   => $shift->worker_id,
+                    'title'       => 'Shift Updated',
+                    'message'     => $messageText,
+                    'shift_start' => $shift->start_time,
+                    'shift_end'   => $shift->end_time,
+                    'flight_id'   => $shift->flight_id,
+                ]);
+
+                // Send email to worker
+                Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+            }
+        } else {
+            // Normal single-day shift
+            $shift = Shift::create($validated);
+
+            $messageText = "Your shift has been assigned/updated.";
+
+            Notification::create([
+                'worker_id'   => $shift->worker_id,
+                'title'       => 'Shift Updated',
+                'message'     => $messageText,
+                'shift_start' => $shift->start_time,
+                'shift_end'   => $shift->end_time,
+                'flight_id'   => $shift->flight_id,
+            ]);
+
+            Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+        }
 
         return redirect()->route('admin.add.shifts')->with('success', 'Shift added successfully!');
     }
+
 
 
     public function storeDragDropShift(Request $request)
@@ -172,24 +212,87 @@ class AdminController extends Controller
         ]);
 
         $flight = Flight::findOrFail($validated['flight_id']);
-
-        // ✅ Combine flight->date with the time coming from JS (e.g. "15:00:00")
         $startTime = Carbon::parse($request->input('start_time'));
         $endTime   = Carbon::parse($request->input('end_time'));
+        $messageText = "Your shift has been assigned/updated.";
 
+        // Check if shift crosses midnight
+        if ($startTime->isSameDay($endTime) === false) {
+            // --- First shift: start_time → 23:59 same day ---
+            $firstShift = Shift::create([
+                'worker_id'        => $validated['worker_id'],
+                'flight_id'        => $validated['flight_id'],
+                'start_time'       => $startTime,
+                'end_time'         => $startTime->copy()->endOfDay(), // 23:59:59
+                'break_time_start' => null,
+                'break_time_end'   => null,
+                'notes'            => $validated['notes'] ?? null,
+                'shift_type'       => 1,
+            ]);
+
+            // --- Second shift: 00:00 → end_time next day ---
+            $secondShift = Shift::create([
+                'worker_id'        => $validated['worker_id'],
+                'flight_id'        => $validated['flight_id'],
+                'start_time'       => $endTime->copy()->startOfDay(), // 00:00
+                'end_time'         => $endTime,
+                'break_time_start' => null,
+                'break_time_end'   => null,
+                'notes'            => $validated['notes'] ?? null,
+                'shift_type'       => 1,
+            ]);
+
+            // Update flight status
+            $flight->update(['status' => 'assigned']);
+
+            // --- Notifications for both shifts ---
+            foreach ([$firstShift, $secondShift] as $shift) {
+                Notification::create([
+                    'worker_id'   => $shift->worker_id,
+                    'title'       => 'Shift Updated',
+                    'message'     => $messageText,
+                    'shift_start' => $shift->start_time,
+                    'shift_end'   => $shift->end_time,
+                    'flight_id'   => $shift->flight_id,
+                ]);
+
+                // Send email notification
+                Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Overnight shift created successfully and split into two parts!',
+                'shifts'  => [$firstShift, $secondShift],
+            ]);
+        }
+
+        // --- Normal single-day shift ---
         $shift = Shift::create([
-            'worker_id'       => $validated['worker_id'],
-            'flight_id'       => $validated['flight_id'],
-            'start_time'      => $startTime,
-            'end_time'        => $endTime,
+            'worker_id'        => $validated['worker_id'],
+            'flight_id'        => $validated['flight_id'],
+            'start_time'       => $startTime,
+            'end_time'         => $endTime,
             'break_time_start' => null,
-            'break_time_end'  => null,
-            'notes'           => $validated['notes'] ?? null,
-            'shift_type'      => 1, // regular shift
+            'break_time_end'   => null,
+            'notes'            => $validated['notes'] ?? null,
+            'shift_type'       => 1,
         ]);
 
-        // Optionally update flight status
         $flight->update(['status' => 'assigned']);
+
+        // --- Notification for single shift ---
+        Notification::create([
+            'worker_id'   => $shift->worker_id,
+            'title'       => 'Shift Updated',
+            'message'     => $messageText,
+            'shift_start' => $shift->start_time,
+            'shift_end'   => $shift->end_time,
+            'flight_id'   => $shift->flight_id,
+        ]);
+
+        // --- Send email to worker ---
+        Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
 
         return response()->json([
             'success' => true,
@@ -479,28 +582,28 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Error creating user: ' . $e->getMessage());
         }
     }
-   public function editShift($id)
-{
-    $shift = Shift::findOrFail($id);
+    public function editShift($id)
+    {
+        $shift = Shift::findOrFail($id);
 
-    // Show edit form view
-    return view('admin.edit-shift', compact('shift'));
-}
+        // Show edit form view
+        return view('admin.edit-shift', compact('shift'));
+    }
 
-public function updateShiftAdmin(Request $request, $id)
-{
-    $shift = Shift::findOrFail($id);
+    public function updateShiftAdmin(Request $request, $id)
+    {
+        $shift = Shift::findOrFail($id);
 
-    $validated = $request->validate([
-        'worker_id' => 'nullable|exists:workers,id',
-        'flight_id' => 'nullable|exists:flights,id',
-        'start_time' => 'required|date',
-        'end_time' => 'required|date|after:start_time',
-        'status' => 'required|in:scheduled,in_progress,completed,cancelled',
-    ]);
+        $validated = $request->validate([
+            'worker_id' => 'nullable|exists:workers,id',
+            'flight_id' => 'nullable|exists:flights,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+            'status' => 'required|in:scheduled,in_progress,completed,cancelled',
+        ]);
 
-    $shift->update($validated);
-     // Create notification
+        $shift->update($validated);
+        // Create notification
         $messageText = "Your shift has been assigned/updated.";
         Notification::create([
             'worker_id' => $shift->worker_id,
@@ -513,16 +616,16 @@ public function updateShiftAdmin(Request $request, $id)
 
         // Send email to worker
         Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
-    
 
-    return redirect()->route('admin.view.shifts')->with('success', 'Shift updated successfully.');
-}
 
-public function deleteShift($id)
-{
-    $shift = Shift::findOrFail($id);
-    $shift->delete();
+        return redirect()->route('admin.view.shifts')->with('success', 'Shift updated successfully.');
+    }
 
-    return redirect()->route('admin.view.shifts')->with('success', 'Shift deleted successfully.');
-}
+    public function deleteShift($id)
+    {
+        $shift = Shift::findOrFail($id);
+        $shift->delete();
+
+        return redirect()->route('admin.view.shifts')->with('success', 'Shift deleted successfully.');
+    }
 }

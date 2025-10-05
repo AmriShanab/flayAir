@@ -399,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function(){
     // Set modal content
     title.textContent = `Shift Details - ${shift.worker_name}`;
     body.innerHTML = `
-        <p><strong>Worker:</strong> ${shift.worker_name}</p>
+        <p><strong>Staff:</strong> ${shift.worker_name}</p>
         <p><strong>Shift:</strong> ${shift.start_time} - ${shift.end_time}</p>
         <p><strong>Notes:</strong> ${shift.notes || "None"}</p>
     `;

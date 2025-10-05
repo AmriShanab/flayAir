@@ -24,26 +24,26 @@
         
         /* Enhanced Sidebar Header */
         .sidebar-header { 
-            padding: 25px 20px; 
+            padding: 1px 20px; 
             text-align: center; 
-            border-bottom: 1px solid rgba(255,255,255,0.15); 
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
+            /* border-bottom: 1px solid rgba(255,255,255,0.15);  */
+            /* background: rgba(255,255,255,0.05); */
+            /* backdrop-filter: blur(10px); */
         }
         
         /* Enhanced Logo Container */
         .sidebar-logo { 
-            width: 140px; 
-            height: 140px; 
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
-            border-radius: 50%; 
+            width: 220px; 
+            height: 160px; 
+            /* background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);  */
+            /* border-radius: 50%;  */
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            margin: 0 auto 20px; 
-            padding: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            border: 3px solid rgba(255,255,255,0.3);
+            /* margin: 0 auto 20px;  */
+            /* padding: 15px; */
+            /* box-shadow: 0 8px 25px rgba(0,0,0,0.2); */
+            /* border: 3px solid rgba(255,255,255,0.3); */
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
@@ -52,24 +52,24 @@
         .sidebar-logo::before {
             content: '';
             position: absolute;
-            top: -50%;
+            /* top: -50%;
             left: -50%;
             width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            height: 200%; */
+            /* background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent); */
             transform: rotate(45deg);
             transition: all 0.6s ease;
         }
         
-        .sidebar-logo:hover::before {
+        /* .sidebar-logo:hover::before {
             transform: rotate(45deg) translate(50%, 50%);
-        }
-        
+        } */
+/*         
         .sidebar-logo:hover {
             transform: scale(1.05);
             box-shadow: 0 12px 35px rgba(0,0,0,0.3);
             border-color: rgba(255,255,255,0.5);
-        }
+        } */
         
         .sidebar-logo img { 
             width: 100%; 
@@ -329,10 +329,10 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <img src="{{ asset('images/Zorovel-Black-HQ-Big.png') }}" alt="Zoroval Logo">
+                <img src="{{ asset('images/Zoro-HQ-Big.png') }}" alt="Zoroval Logo">
             </div>
-            <h2>Zoroval</h2>
-            <div class="sidebar-subtitle">Crew Management</div>
+            {{-- <h2>Zoroval</h2> --}}
+            {{-- <div class="sidebar-subtitle">Crew Management</div> --}}
         </div>
         
         <div class="sidebar-menu">

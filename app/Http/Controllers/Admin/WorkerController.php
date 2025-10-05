@@ -9,12 +9,24 @@ use App\Models\Worker;
 class WorkerController extends Controller
 {
     // List all workers
-    public function index()
-    {
-            $workers = Worker::orderBy('id', 'asc')->paginate(10); // use paginate if you want pagination
+    public function index(Request $request)
+{
+    $search = $request->input('search');
 
-        return view('admin.workers.index', compact('workers'));
-    }
+    $workers = \App\Models\Worker::query()
+        ->when($search, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        })
+        ->orderBy('first_name', 'asc') // Alphabetical order
+        ->get(); // Removed pagination
+
+    return view('admin.workers.index', compact('workers', 'search'));
+}
 
     // Show create form
     public function create()

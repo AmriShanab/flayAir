@@ -591,7 +591,7 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-icon">
-                        <img src="{{ asset('images/Zorovel Logo - Zorovel Black Logo - Edited.png') }}" alt="">
+                        <img src="{{ asset('images/zoro-clr-logo.png') }}" alt="">
                     </div>
                     {{-- <span>Zoroval</span> --}}
                 </div>
@@ -610,7 +610,7 @@
                 <h1>Streamline Your Crew Scheduling</h1>
                 <p>Zorovel is the ultimate solution for managing your team's shifts, schedules, and availability. Save time, reduce errors, and keep your crew connected.</p>
                 <div class="hero-buttons">
-                    <a href="#" class="btn btn-primary">Get Started</a>
+                    <a href="{{ route('login') }}" class="btn btn-primary">Get Started</a>
                     <a href="#features" class="btn btn-outline">Learn More</a>
                 </div>
             </div>

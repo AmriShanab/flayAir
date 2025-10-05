@@ -30,8 +30,7 @@ class ShiftController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        $flights = Flight::where('status', 'scheduled')
-            ->whereDate('date', $date)
+        $flights = Flight::whereDate('date', $date)
             ->get();
         // dd($flights);
         return view('shifts.index', [

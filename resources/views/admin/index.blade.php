@@ -24,7 +24,7 @@
             <p>Total Staffs</p>
         </div>
     </div>
-    <div class="stat-card">
+    {{-- <div class="stat-card">
         <div class="stat-icon shifts">
             <i class="bi bi-calendar-week"></i>
         </div>
@@ -32,7 +32,7 @@
             <h3>{{ $totalShifts ?? 0 }}</h3>
             <p>Shifts This Week</p>
         </div>
-    </div>
+    </div> --}}
     <div class="stat-card">
         <div class="stat-icon flights">
             <i class="bi bi-airplane"></i>
@@ -46,7 +46,7 @@
 
 <div class="row">
     <!-- Recent Workers -->
-    <div class="col-lg-4 col-md-6 mb-4">
+    <div class="col-lg-6 col-md-6 mb-4">
         <div class="card">
             <div class="workers-card-header">
                 <span>Today Staffs</span>
@@ -89,7 +89,7 @@
     </div>
 
     <!-- Recent Shifts -->
-    <div class="col-lg-4 col-md-6 mb-4">
+    {{-- <div class="col-lg-4 col-md-6 mb-4">
         <div class="card">
             <div class="shifts-card-header">
                 <span>Recent Shifts</span>
@@ -135,10 +135,10 @@
                 <a href="{{ route('admin.add.shifts') }}">Add New Shift</a>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Recent Flights -->
-    <div class="col-lg-4 col-md-6 mb-4">
+    <div class="col-lg-6 col-md-6 mb-4">
         <div class="card">
             <div class="flights-card-header">
                 <span>Today Flights</span>

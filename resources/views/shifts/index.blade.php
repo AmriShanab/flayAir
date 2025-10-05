@@ -157,6 +157,40 @@
             max-width: 250px;
             height: 55px;
         }
+
+        .flight-tile {
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    text-align: center;
+    cursor: grab;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.flight-tile:hover {
+    transform: scale(1.03);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Status Colors */
+.flight-assigned {
+    background-color: #28a745; /* green */
+}
+
+.flight-scheduled {
+    background-color: #007bff; /* blue */
+}
+
+.flight-cancelled {
+    background-color: #dc3545; /* red */
+}
+
+.flight-default {
+    background-color: #6c757d; /* gray fallback */
+}
+
     </style>
 </head>
 
@@ -443,11 +477,21 @@
                     </button>
                 </div>
             </div>
+
             <div class="flights-panel-content" id="flights-panel-content">
                 <div class="flights-container" id="available-flights">
                     @if(count($flights) > 0)
                         @foreach($flights as $flight)
-                            <div class="flight-tile"
+                            @php
+                                $statusClass = match($flight->status) {
+                                    'assigned' => 'flight-assigned',
+                                    'scheduled' => 'flight-scheduled',
+                                    'cancelled' => 'flight-cancelled',
+                                    default => 'flight-default',
+                                };
+                            @endphp
+
+                            <div class="flight-tile {{ $statusClass }}"
                                 draggable="true"
                                 data-flight-id="{{ $flight->id }}"
                                 data-departure-time="{{ \Carbon\Carbon::parse($flight->scheduled_time)->toIso8601String() }}">
@@ -470,6 +514,7 @@
         </button>
     @endif
 @endauth
+
 
 <!-- ===================== Shift Details Modal ===================== -->
 <div id="shift-details-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
