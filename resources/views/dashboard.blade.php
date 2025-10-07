@@ -405,7 +405,7 @@
                 <a href="http://endevodigital.com/" target="_blank" class="footer-link">
                     <i class="fas fa-external-link-alt footer-icon"></i>
                     <span>Powered by</span>
-                    <span class="footer-brand">EndevoDigital</span>
+                    <span class="footer-brand">Endevo Digital</span>
                 </a>
             </div>
         </footer>

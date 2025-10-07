@@ -845,7 +845,7 @@
     @hasSection('hide-footer')
         {{-- Footer is hidden for this page --}}
     @else
-        <footer class="footer">
+        <footer class="footer mt-5">
             <span>Powered by</span>
             <span>Endevo Digital</span>
         </footer>
