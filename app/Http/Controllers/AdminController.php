@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Worker;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -86,154 +87,161 @@ class AdminController extends Controller
         return redirect()->route('admin.add.flights')->with('success', 'Flight added successfully!');
     }
 
- public function storeShifts(Request $request)
-{
-    // Validate input
-    $validated = $request->validate([
-        'worker_id'  => 'required|exists:workers,id',
-        'start_time' => 'required|date',
-        'end_time'   => 'required|date|after:start_time',
-        'notes'      => 'nullable|string',
-        'flight_id'  => 'required|exists:flights,id',
-        'shift_type' => 'required|integer',
-    ]);
-
-    $start = \Carbon\Carbon::parse($validated['start_time']);
-    $end   = \Carbon\Carbon::parse($validated['end_time']);
-    $messageText = "Your shift has been assigned successfully.";
-
-    // --- If the shift crosses midnight ---
-    if (!$start->isSameDay($end)) {
-        $validated['notes'] = "Overnight shift: " . $start->format('Y-m-d H:i') . " to " . $end->format('Y-m-d H:i');
-
-        // First part: start to 23:59
-        $firstShift = Shift::create([
-            'worker_id'  => $validated['worker_id'],
-            'flight_id'  => $validated['flight_id'],
-            'start_time' => $start,
-            'end_time'   => $start->copy()->endOfDay(),
-            'notes'      => $validated['notes'],
-            'shift_type' => $validated['shift_type'],
+    public function storeShifts(Request $request)
+    {
+        // Validate input
+        $validated = $request->validate([
+            'worker_id'  => 'required|exists:workers,id',
+            'start_time' => 'required|date',
+            'end_time'   => 'required|date|after:start_time',
+            'notes'      => 'nullable|string',
+            'flight_id'  => 'required|exists:flights,id',
+            'shift_type' => 'required|integer',
         ]);
 
-        // Second part: 00:00 to actual end
-        $secondShift = Shift::create([
-            'worker_id'  => $validated['worker_id'],
-            'flight_id'  => $validated['flight_id'],
-            'start_time' => $end->copy()->startOfDay(),
-            'end_time'   => $end,
-            'notes'      => $validated['notes'],
-            'shift_type' => $validated['shift_type'],
-        ]);
+        $start = \Carbon\Carbon::parse($validated['start_time']);
+        $end   = \Carbon\Carbon::parse($validated['end_time']);
+        $messageText = "Your shift has been assigned successfully.";
 
-        // --- Create ONE notification ---
-        Notification::create([
-            'worker_id'   => $validated['worker_id'],
-            'title'       => 'Shift Assigned',
-            'message'     => 'Your overnight shift has been scheduled (split into two parts).',
-            'shift_start' => $start,
-            'shift_end'   => $end,
-            'flight_id'   => $validated['flight_id'],
-        ]);
+        // ✅ Get the username of the currently logged-in admin
+        $assignedUser = Auth::check() ? Auth::user()->name : 'System';
 
-        // --- Send ONE email ---
-        Mail::to($firstShift->worker->email)->send(
-            new ShiftNotificationMail($firstShift, 'Your overnight shift has been scheduled (split into two parts).')
-        );
-    } 
-    else {
-        // --- Normal single-day shift ---
-        $shift = Shift::create($validated);
+        // ✅ Append "Assigned user" to existing notes (if any)
+        $validated['notes'] = trim(($validated['notes'] ?? '') . " | Assigned user: {$assignedUser}");
 
-        Notification::create([
-            'worker_id'   => $shift->worker_id,
-            'title'       => 'Shift Assigned',
-            'message'     => $messageText,
-            'shift_start' => $shift->start_time,
-            'shift_end'   => $shift->end_time,
-            'flight_id'   => $shift->flight_id,
-        ]);
+        // --- If the shift crosses midnight ---
+        if (!$start->isSameDay($end)) {
+            $validated['notes'] = "Overnight shift: " . $start->format('Y-m-d H:i') . " to " . $end->format('Y-m-d H:i') . " | Assigned user: {$assignedUser}";
 
-        Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+            // First part: start to 23:59
+            $firstShift = Shift::create([
+                'worker_id'  => $validated['worker_id'],
+                'flight_id'  => $validated['flight_id'],
+                'start_time' => $start,
+                'end_time'   => $start->copy()->endOfDay(),
+                'notes'      => $validated['notes'],
+                'shift_type' => $validated['shift_type'],
+            ]);
+
+            // Second part: 00:00 to actual end
+            $secondShift = Shift::create([
+                'worker_id'  => $validated['worker_id'],
+                'flight_id'  => $validated['flight_id'],
+                'start_time' => $end->copy()->startOfDay(),
+                'end_time'   => $end,
+                'notes'      => $validated['notes'],
+                'shift_type' => $validated['shift_type'],
+            ]);
+
+            // --- Create ONE notification ---
+            Notification::create([
+                'worker_id'   => $validated['worker_id'],
+                'title'       => 'Shift Assigned',
+                'message'     => 'Your overnight shift has been scheduled (split into two parts).',
+                'shift_start' => $start,
+                'shift_end'   => $end,
+                'flight_id'   => $validated['flight_id'],
+            ]);
+
+            // --- Send ONE email ---
+            Mail::to($firstShift->worker->email)->send(
+                new ShiftNotificationMail($firstShift, 'Your overnight shift has been scheduled (split into two parts).')
+            );
+        } else {
+            // --- Normal single-day shift ---
+            $shift = Shift::create($validated);
+
+            Notification::create([
+                'worker_id'   => $shift->worker_id,
+                'title'       => 'Shift Assigned',
+                'message'     => $messageText,
+                'shift_start' => $shift->start_time,
+                'shift_end'   => $shift->end_time,
+                'flight_id'   => $shift->flight_id,
+            ]);
+
+            Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+        }
+
+        return redirect()->route('admin.add.shifts')->with('success', 'Shift added successfully!');
     }
 
-    return redirect()->route('admin.add.shifts')->with('success', 'Shift added successfully!');
-}
 
 
-public function storeShiftsWeb(Request $request)
-{
-    $validated = $request->validate([
-        'worker_id'  => 'required|exists:workers,id',
-        'start_time' => 'required|date',
-        'end_time'   => 'required|date|after:start_time',
-        'notes'      => 'nullable|string',
-        'flight_id'  => 'nullable|exists:flights,id',
-        'shift_type' => 'required|integer',
-    ]);
-
-    $start = \Carbon\Carbon::parse($validated['start_time']);
-    $end   = \Carbon\Carbon::parse($validated['end_time']);
-
-    $messageText = "Your shift has been assigned successfully.";
-
-    // Check if the shift crosses midnight
-    if (!$start->isSameDay($end)) {
-        $validated['notes'] = "Overnight shift: " . $start->format('Y-m-d H:i') . " to " . $end->format('Y-m-d H:i');
-
-        // First shift: from start to 23:59 of start day
-        $firstShift = Shift::create([
-            'worker_id'  => $validated['worker_id'],
-            'start_time' => $start,
-            'end_time'   => $start->copy()->endOfDay(),
-            'notes'      => $validated['notes'],
-            'flight_id'  => $validated['flight_id'] ?? null,
-            'shift_type' => $validated['shift_type'],
+    public function storeShiftsWeb(Request $request)
+    {
+        $validated = $request->validate([
+            'worker_id'  => 'required|exists:workers,id',
+            'start_time' => 'required|date',
+            'end_time'   => 'required|date|after:start_time',
+            'notes'      => 'nullable|string',
+            'flight_id'  => 'nullable|exists:flights,id',
+            'shift_type' => 'required|integer',
         ]);
 
-        // Second shift: from 00:00 of next day to original end time
-        $secondShift = Shift::create([
-            'worker_id'  => $validated['worker_id'],
-            'start_time' => $end->copy()->startOfDay(),
-            'end_time'   => $end,
-            'notes'      => $validated['notes'],
-            'flight_id'  => $validated['flight_id'] ?? null,
-            'shift_type' => $validated['shift_type'],
-        ]);
+        $start = \Carbon\Carbon::parse($validated['start_time']);
+        $end   = \Carbon\Carbon::parse($validated['end_time']);
+        $messageText = "Your shift has been assigned successfully.";
 
-        // Create a single notification summarizing both shifts
-        Notification::create([
-            'worker_id'   => $validated['worker_id'],
-            'title'       => 'Shift Assigned',
-            'message'     => 'Your shift has been split into two parts (overnight assignment).',
-            'shift_start' => $start,
-            'shift_end'   => $end,
-            'flight_id'   => $validated['flight_id'] ?? null,
-        ]);
+        // ✅ Add "Assigned user" info
+        $assignedUser = Auth::check() ? Auth::user()->name : 'System';
+        $validated['notes'] = trim(($validated['notes'] ?? '') . " | Assigned user: {$assignedUser}");
 
-        // Send one email to the worker summarizing both parts
-        Mail::to($firstShift->worker->email)->send(
-            new ShiftNotificationMail($firstShift, "Your shift has been split into two parts (overnight assignment).")
-        );
+        // --- If shift crosses midnight ---
+        if (!$start->isSameDay($end)) {
+            $validated['notes'] = "Overnight shift: " . $start->format('Y-m-d H:i') .
+                " to " . $end->format('Y-m-d H:i') .
+                " | Assigned user: {$assignedUser}";
 
-    } else {
-        // Normal single-day shift
-        $shift = Shift::create($validated);
+            // First part
+            $firstShift = Shift::create([
+                'worker_id'  => $validated['worker_id'],
+                'start_time' => $start,
+                'end_time'   => $start->copy()->endOfDay(),
+                'notes'      => $validated['notes'],
+                'flight_id'  => $validated['flight_id'] ?? null,
+                'shift_type' => $validated['shift_type'],
+            ]);
 
-        Notification::create([
-            'worker_id'   => $shift->worker_id,
-            'title'       => 'Shift Assigned',
-            'message'     => $messageText,
-            'shift_start' => $shift->start_time,
-            'shift_end'   => $shift->end_time,
-            'flight_id'   => $shift->flight_id,
-        ]);
+            // Second part
+            $secondShift = Shift::create([
+                'worker_id'  => $validated['worker_id'],
+                'start_time' => $end->copy()->startOfDay(),
+                'end_time'   => $end,
+                'notes'      => $validated['notes'],
+                'flight_id'  => $validated['flight_id'] ?? null,
+                'shift_type' => $validated['shift_type'],
+            ]);
 
-        Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+            Notification::create([
+                'worker_id'   => $validated['worker_id'],
+                'title'       => 'Shift Assigned',
+                'message'     => 'Your shift has been split into two parts (overnight assignment).',
+                'shift_start' => $start,
+                'shift_end'   => $end,
+                'flight_id'   => $validated['flight_id'] ?? null,
+            ]);
+
+            Mail::to($firstShift->worker->email)->send(
+                new ShiftNotificationMail($firstShift, "Your shift has been split into two parts (overnight assignment).")
+            );
+        } else {
+            $shift = Shift::create($validated);
+
+            Notification::create([
+                'worker_id'   => $shift->worker_id,
+                'title'       => 'Shift Assigned',
+                'message'     => $messageText,
+                'shift_start' => $shift->start_time,
+                'shift_end'   => $shift->end_time,
+                'flight_id'   => $shift->flight_id,
+            ]);
+
+            Mail::to($shift->worker->email)->send(new ShiftNotificationMail($shift, $messageText));
+        }
+
+        return redirect()->route('admin.add.shifts')->with('success', 'Shift added successfully!');
     }
-
-    return redirect()->route('admin.add.shifts')->with('success', 'Shift added successfully!');
-}
 
 
 
@@ -247,42 +255,45 @@ public function storeShiftsWeb(Request $request)
         ]);
 
         $flight = Flight::findOrFail($validated['flight_id']);
-        $startTime = Carbon::parse($request->input('start_time'));
-        $endTime   = Carbon::parse($request->input('end_time'));
+        $startTime = \Carbon\Carbon::parse($request->input('start_time'));
+        $endTime   = \Carbon\Carbon::parse($request->input('end_time'));
         $messageText = "Your shift has been assigned/updated.";
+
+        // ✅ Add "Assigned user" info
+        $assignedUser = Auth::check() ? Auth::user()->name : 'System';
+        $validated['notes'] = trim(($validated['notes'] ?? '') . " | Assigned user: {$assignedUser}");
 
         $createdShifts = [];
 
         // 🕒 Check if shift crosses midnight
         if ($startTime->isSameDay($endTime) === false) {
-            // --- First shift: start_time → 23:59 same day ---
+            // --- First shift ---
             $firstShift = Shift::create([
                 'worker_id'        => $validated['worker_id'],
                 'flight_id'        => $validated['flight_id'],
                 'start_time'       => $startTime,
-                'end_time'         => $startTime->copy()->endOfDay(), // 23:59:59
+                'end_time'         => $startTime->copy()->endOfDay(),
                 'break_time_start' => null,
                 'break_time_end'   => null,
-                'notes'            => $validated['notes'] ?? null,
+                'notes'            => $validated['notes'],
                 'shift_type'       => 1,
             ]);
 
-            // --- Second shift: 00:00 → end_time next day ---
+            // --- Second shift ---
             $secondShift = Shift::create([
                 'worker_id'        => $validated['worker_id'],
                 'flight_id'        => $validated['flight_id'],
-                'start_time'       => $endTime->copy()->startOfDay(), // 00:00
+                'start_time'       => $endTime->copy()->startOfDay(),
                 'end_time'         => $endTime,
                 'break_time_start' => null,
                 'break_time_end'   => null,
-                'notes'            => $validated['notes'] ?? null,
+                'notes'            => $validated['notes'],
                 'shift_type'       => 1,
             ]);
 
             $createdShifts = [$firstShift, $secondShift];
-        }
-        // --- Normal single-day shift ---
-        else {
+        } else {
+            // --- Normal single-day shift ---
             $shift = Shift::create([
                 'worker_id'        => $validated['worker_id'],
                 'flight_id'        => $validated['flight_id'],
@@ -290,7 +301,7 @@ public function storeShiftsWeb(Request $request)
                 'end_time'         => $endTime,
                 'break_time_start' => null,
                 'break_time_end'   => null,
-                'notes'            => $validated['notes'] ?? null,
+                'notes'            => $validated['notes'],
                 'shift_type'       => 1,
             ]);
 
@@ -301,7 +312,7 @@ public function storeShiftsWeb(Request $request)
         $flight->update(['status' => 'assigned']);
 
         // ✅ Send ONE notification & ONE email (even for overnight)
-        $firstShift = $createdShifts[0]; // use the first one as reference
+        $firstShift = $createdShifts[0];
 
         Notification::create([
             'worker_id'   => $validated['worker_id'],

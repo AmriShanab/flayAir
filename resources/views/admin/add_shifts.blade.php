@@ -146,7 +146,7 @@
             </div>
         </div>
     </div>
-                <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:11rem;">Powered by Endevo Digital</a>
+                {{-- <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:11rem;">Powered by Endevo Digital</a> --}}
 
 </div>
 

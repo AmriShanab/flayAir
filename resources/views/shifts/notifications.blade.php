@@ -185,9 +185,11 @@
         .btn-dismiss:hover { background: rgba(107, 114, 128, 0.2); transform: translateY(-1px); box-shadow: 0 2px 5px rgba(107, 114, 128, 0.2); }
         .btn-ack { background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; border: 1px solid #10B981; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3); }
         .btn-ack:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4); }
+        .btn-decline { background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; border: 1px solid #EF4444; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3); }
+        .btn-decline:hover { background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4); }
 
         .ack-status { color: #059669; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(16, 185, 129, 0.1); border-radius: 6px; border: 1px dashed #10B981; }
-        .ack-status i { color: #10B981; font-size: 14px; }
+        .decline-status { color: #DC2626; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(239, 68, 68, 0.1); border-radius: 6px; border: 1px dashed #EF4444; }
         .btn-small:active { transform: translateY(1px); }
 
         .empty-state { text-align: center; padding: 50px 20px; color: #888; }
@@ -205,6 +207,24 @@
         .modal-detail-item { display: flex; justify-content: space-between; margin-bottom: 8px; }
         .modal-detail-label { font-weight: 600; color: #0a2e6f; }
         .modal-detail-value { color: #666; }
+
+        /* Decline Reason Modal */
+        .decline-modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); overflow: auto; animation: fadeIn 0.3s ease; }
+        .decline-modal-content { background: #fff; margin: 10% auto; padding: 30px; border-radius: 15px; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); animation: slideDown 0.3s ease; position: relative; }
+        .decline-modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; font-weight: bold; cursor: pointer; color: #666; transition: color 0.3s; }
+        .decline-modal-close:hover { color: #000; }
+        .decline-modal h2 { color: #DC2626; margin-bottom: 15px; font-size: 24px; }
+        .decline-modal p { margin-bottom: 15px; line-height: 1.6; }
+        .decline-reason-form { margin-top: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: #0a2e6f; }
+        .form-textarea { width: 100%; min-height: 120px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; resize: vertical; transition: border-color 0.3s; }
+        .form-textarea:focus { outline: none; border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .btn-cancel { padding: 10px 20px; border-radius: 8px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; cursor: pointer; transition: all 0.3s; }
+        .btn-cancel:hover { background: #e5e7eb; }
+        .btn-submit-decline { padding: 10px 20px; border-radius: 8px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; border: none; cursor: pointer; transition: all 0.3s; }
+        .btn-submit-decline:hover { background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4); }
 
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideDown { from {transform: translateY(-20px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
@@ -308,6 +328,7 @@
             .notification-actions-item { gap: 8px; }
             .btn-small { padding: 6px 10px; font-size: 12px; }
             .modal-content { margin: 5% auto; padding: 20px; }
+            .decline-modal-content { margin: 5% auto; padding: 20px; }
         }
 
         .sidebar-menu a { text-decoration: none; color: #fff; }
@@ -388,6 +409,11 @@
                             <div class="notification-content">
                                 <h3 class="notification-title">{{ $notification->title }}</h3>
                                 <p class="notification-message">{{ $notification->message }}</p>
+                                @if($notification->decline_reason)
+                                    <div class="decline-reason" style="margin: 8px 0; padding: 8px 12px; background: rgba(239, 68, 68, 0.1); border-radius: 6px; border-left: 3px solid #EF4444;">
+                                        <strong>Decline Reason:</strong> {{ $notification->decline_reason }}
+                                    </div>
+                                @endif
                                 <div class="notification-time">
                                     <i class="far fa-clock"></i> {{ $notification->created_at->diffForHumans() }}
                                 </div>
@@ -410,9 +436,16 @@
                                         <button class="btn-small btn-ack" data-id="{{ $notification->id }}">
                                             <i class="fas fa-check-circle"></i> Accept
                                         </button>
+                                        <button class="btn-small btn-decline" data-id="{{ $notification->id }}">
+                                            <i class="fas fa-times-circle"></i> Decline
+                                        </button>
                                     @elseif($notification->is_read == 2)
                                         <span class="ack-status">
                                             <i class="fas fa-check-circle"></i> Accepted
+                                        </span>
+                                    @elseif($notification->is_read == 3)
+                                        <span class="decline-status">
+                                            <i class="fas fa-times-circle"></i> Declined
                                         </span>
                                     @endif
                                 </div>
@@ -466,6 +499,25 @@
         </div>
     </div>
 
+    <!-- Decline Reason Modal -->
+    <div id="declineModal" class="decline-modal">
+        <div class="decline-modal-content">
+            <span class="decline-modal-close">&times;</span>
+            <h2>Decline Notification</h2>
+            <p>Please provide a reason for declining this notification:</p>
+            <div class="decline-reason-form">
+                <div class="form-group">
+                    <label for="declineReason" class="form-label">Reason for Decline:</label>
+                    <textarea id="declineReason" class="form-textarea" placeholder="Enter your reason for declining this notification..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-cancel">Cancel</button>
+                    <button class="btn-submit-decline">Submit Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -474,8 +526,16 @@
         const modalMessage = document.getElementById('modalMessage');
         const modalClose = document.querySelector('.modal-close');
 
+        const declineModal = document.getElementById('declineModal');
+        const declineReason = document.getElementById('declineReason');
+        const declineModalClose = document.querySelector('.decline-modal-close');
+        const declineCancel = document.querySelector('.btn-cancel');
+        const declineSubmit = document.querySelector('.btn-submit-decline');
+
         // CSRF Token for AJAX requests
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+
+        let currentDeclineId = null;
 
         // View Details Button
         document.querySelectorAll('.btn-view').forEach(button => {
@@ -509,6 +569,20 @@
             });
         });
 
+        // Decline Button
+        document.querySelectorAll('.btn-decline').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.dataset.id;
+                currentDeclineId = id;
+                
+                // Reset the form
+                declineReason.value = '';
+                
+                // Show decline modal
+                declineModal.style.display = 'block';
+            });
+        });
+
         // Dismiss Button
         document.querySelectorAll('.btn-dismiss').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -529,14 +603,41 @@
             clearAllNotifications();
         });
 
-        // Close Modal
+        // Close Modals
         modalClose.addEventListener('click', () => {
             modal.style.display = 'none';
+        });
+
+        declineModalClose.addEventListener('click', () => {
+            declineModal.style.display = 'none';
+            currentDeclineId = null;
+        });
+
+        declineCancel.addEventListener('click', () => {
+            declineModal.style.display = 'none';
+            currentDeclineId = null;
+        });
+
+        // Submit Decline Reason
+        declineSubmit.addEventListener('click', function() {
+            if (!currentDeclineId) return;
+            
+            const reason = declineReason.value.trim();
+            if (!reason) {
+                alert('Please provide a reason for declining.');
+                return;
+            }
+
+            declineNotification(currentDeclineId, reason);
         });
 
         window.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.style.display = 'none';
+            }
+            if (e.target === declineModal) {
+                declineModal.style.display = 'none';
+                currentDeclineId = null;
             }
         });
 
@@ -598,13 +699,80 @@
             .then(data => {
                 if (data.success) {
                     // Replace button with "Accepted" status
+                    const actionsContainer = button.closest('.notification-actions-item');
                     button.outerHTML = '<span class="ack-status"><i class="fas fa-check-circle"></i> Accepted</span>';
+                    
+                    // Remove decline button if it exists
+                    const declineBtn = actionsContainer.querySelector('.btn-decline');
+                    if (declineBtn) {
+                        declineBtn.remove();
+                    }
+                    
                     showToast('Notification accepted', '#10b981');
                 }
             })
             .catch(error => {
                 console.error('Error acknowledging notification:', error);
                 showToast('Error accepting notification', '#dc3545');
+            });
+        }
+
+        // Function to decline notification with reason
+        function declineNotification(id, reason) {
+            fetch(`/notification/decline/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    reason: reason
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Close modal
+                    declineModal.style.display = 'none';
+                    currentDeclineId = null;
+                    
+                    // Update UI
+                    const notificationItem = document.querySelector(`.notification-item[data-id="${id}"]`);
+                    if (notificationItem) {
+                        const actionsContainer = notificationItem.querySelector('.notification-actions-item');
+                        
+                        // Remove accept and decline buttons
+                        const acceptBtn = actionsContainer.querySelector('.btn-ack');
+                        const declineBtn = actionsContainer.querySelector('.btn-decline');
+                        if (acceptBtn) acceptBtn.remove();
+                        if (declineBtn) declineBtn.remove();
+                        
+                        // Add declined status
+                        actionsContainer.innerHTML += '<span class="decline-status"><i class="fas fa-times-circle"></i> Declined</span>';
+                        
+                        // Add decline reason to the notification
+                        const messageContainer = notificationItem.querySelector('.notification-message');
+                        if (messageContainer) {
+                            const declineReasonDiv = document.createElement('div');
+                            declineReasonDiv.className = 'decline-reason';
+                            declineReasonDiv.style.cssText = 'margin: 8px 0; padding: 8px 12px; background: rgba(239, 68, 68, 0.1); border-radius: 6px; border-left: 3px solid #EF4444;';
+                            declineReasonDiv.innerHTML = `<strong>Decline Reason:</strong> ${reason}`;
+                            messageContainer.after(declineReasonDiv);
+                        }
+                    }
+                    
+                    showToast('Notification declined', '#EF4444');
+                }
+            })
+            .catch(error => {
+                console.error('Error declining notification:', error);
+                showToast('Error declining notification', '#dc3545');
             });
         }
 

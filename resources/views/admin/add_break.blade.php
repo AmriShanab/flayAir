@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-header">
-            <h1 class="page-title">Add Break</h1>
+            <h1 class="page-title"></h1>
             <a href="{{ route('shifts.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Back to Shifts
             </a>
@@ -84,11 +84,17 @@
             </div>
             
         </div>
-            <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:15rem; padding-left: 31rem;">Powered by Endevo Digital</a>
+            {{-- <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:15rem; padding-left: 31rem;">Powered by Endevo Digital</a> --}}
 
     </div>
 
 </div>
+
+<footer class="footer">
+    <a href="http://endevodigital.com/" target="_blank" class="footer-link">
+        Powered by Endevo Digital
+    </a>
+</footer>
 
 <style>
     .form-label {

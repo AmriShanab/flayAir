@@ -265,31 +265,31 @@ class ShiftController extends Controller
         return view('shifts.notifications', compact('notifications'));
     }
 
-   public function acknowledge($id)
-{
-    $notification = Notification::find($id);
+    public function acknowledge($id)
+    {
+        $notification = Notification::find($id);
 
-    if ($notification) {
-        $notification->is_read = 2;
-        $notification->acknowledged_at = now();
-        $notification->save();
+        if ($notification) {
+            $notification->is_read = 2;
+            $notification->acknowledged_at = now();
+            $notification->save();
 
-        return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
     }
 
-    return response()->json(['success' => false], 404);
-}
-
-public function dismiss($id)
-{
-    $notification = Notification::find($id);
-    if ($notification) {
-        $notification->is_read = 3; // 3 = dismissed
-        $notification->save();
-        return response()->json(['success' => true]);
+    public function dismiss($id)
+    {
+        $notification = Notification::find($id);
+        if ($notification) {
+            $notification->is_read = 3; // 3 = dismissed
+            $notification->save();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 404);
     }
-    return response()->json(['success' => false], 404);
-}
 
 
 
@@ -306,5 +306,25 @@ public function dismiss($id)
         }
 
         return response()->json(['success' => false], 404);
+    }
+
+    public function decline($id, Request $request)
+    {
+        // dd($request->all());
+        try {
+            $notification = Notification::findOrFail($id);
+
+            // Update notification status and store decline reason
+            $notification->update([
+                'is_read' => 3, // You can use 3 for declined status
+                'decline_reason' => $request->reason,
+                'acknowledged' => 0, // Not acknowledged since it's declined
+                'acknowledged_at' => null,
+            ]);
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
     }
 }

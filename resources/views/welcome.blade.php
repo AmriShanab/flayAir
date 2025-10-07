@@ -591,7 +591,7 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-icon">
-                        <img src="{{ asset('images/zoro-clr-logo.png') }}" alt="">
+                        <img src="{{ asset('images/Zorovel Logo - 7 - Edited.png') }}" alt="">
                     </div>
                     {{-- <span>Zoroval</span> --}}
                 </div>

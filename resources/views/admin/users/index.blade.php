@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('page-title', 'User Management')
-
+@section('hide-footer', true)
 @section('content')
 <div class="row">
     <div class="col-12">
@@ -106,7 +106,7 @@
             </div>
         </div>
     </div>
-                        <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; margin-top:20rem;">Powered by EndevoDigital</a>
+                        {{-- <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; margin-top:20rem;">Powered by EndevoDigital</a> --}}
 
 </div>
 

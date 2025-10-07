@@ -204,7 +204,7 @@
 <div class="p-6 pb-0">
     <div class="flex justify-between items-center mb-6">
            <div class="flex items-center">
-                <img src="{{ asset('images/Zorovel-Black-HQ-Big.png') }}" 
+                <img src="{{ asset('images/Zorovel Logo - 7 - Edited.png') }}" 
                      alt="Zoroval Logo" 
                      class="zoro-logo">
             </div>

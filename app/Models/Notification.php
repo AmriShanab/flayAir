@@ -19,6 +19,7 @@ class Notification extends Model
         'flight_id',
         'acknowledged',
         'acknowledged_at',
+        'decline_reason',
         'read_at'
     ];
 

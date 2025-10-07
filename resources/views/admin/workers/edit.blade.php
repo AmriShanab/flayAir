@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('page-title', 'Edit Worker')
+@section('page-title', 'Edit Staffs')
 
 @section('content')
 <div class="row">

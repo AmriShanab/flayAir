@@ -1,6 +1,7 @@
 @extends('admin.layout')
 
 @section('page-title', 'Staff Management')
+@section('hide-footer', true)
 
 @section('content')
 <head>
@@ -130,4 +131,5 @@
         </div>
     </div>
 </div>
+
 @endsection

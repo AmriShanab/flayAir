@@ -681,6 +681,40 @@
                 justify-content: flex-end;
             }
         }
+
+
+        .footer {
+    background-color: var(--sidebar-bg);
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    box-shadow: var(--card-shadow);
+}
+
+.footer-logo {
+    height: 20px;
+    width: auto;
+    filter: brightness(0) invert(1);
+}
+.main-content {
+    min-height: calc(100vh - 60px); /* 60px = footer height */
+    padding-bottom: 60px; /* same as footer height */
+}
+
+.footer {
+    height: 60px;
+    background-color: #1f2937;
+    color: white;
+    text-align: center;
+    line-height: 60px;
+}
+
     </style>
 </head>
 <body>
@@ -808,6 +842,15 @@
 </div>
 
 <!-- Footer -->
+    @hasSection('hide-footer')
+        {{-- Footer is hidden for this page --}}
+    @else
+        <footer class="footer">
+            <span>Powered by</span>
+            <span>Endevo Digital</span>
+        </footer>
+    @endif
+
 
 
 <!-- Bootstrap JS Bundle -->

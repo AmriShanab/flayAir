@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/notification/mark-read/{id}', [ShiftController::class, 'markAsRead'])->name('notification.markRead');
     Route::post('/notification/dismiss/{id}', [ShiftController::class, 'dismiss'])->name('notification.dismiss');
+    Route::post('/notification/decline/{id}', [ShiftController::class, 'decline'])->name('notification.decline');
 });
 
 // Admin Routes

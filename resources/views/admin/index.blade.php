@@ -21,7 +21,7 @@
         <div class="stat-info">
             {{-- @dd($totalWorkers) --}}
             <h3>{{ $totalWorkers ?? 0 }}</h3>
-            <p>Total Staffs</p>
+            <p>Today Staffs</p>
         </div>
     </div>
     {{-- <div class="stat-card">
@@ -39,7 +39,7 @@
         </div>
         <div class="stat-info">
             <h3>{{ $totalFlights ?? 0 }}</h3>
-            <p>Flights Today</p>
+            <p>Today Flights</p>
         </div>
     </div>
 </div>
@@ -189,7 +189,7 @@
         </div>
         
     </div>
-     <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:3rem;">Powered by EndevoDigital</a>
+     {{-- <a href="http://endevodigital.com/" style="text-decoration: none; color:grey; font-size:1rem; text-align:center; padding-top:3rem;">Powered by EndevoDigital</a> --}}
 </div>
 
 <style>
