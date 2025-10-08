@@ -476,6 +476,8 @@
         </footer>
     </div>
 
+    
+
     <!-- Enhanced Notification Details Modal -->
     <div id="notificationModal" class="modal">
         <div class="modal-content">

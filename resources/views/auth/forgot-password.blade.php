@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoroval - Crew Login</title>
+    <title>Zoroval - Forgot Password</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -50,7 +50,7 @@
             z-index: -1;
         }
         
-        .login-container {
+        .forgot-container {
             display: flex;
             width: 1000px;
             max-width: 100%;
@@ -64,8 +64,7 @@
         
         .brand-section {
             flex: 1.2;
-    background: linear-gradient(135deg, #0a2e6f 0%, #1a56db 100%);
-
+            background: linear-gradient(135deg, #0a2e6f 0%, #1a56db 100%);
             color: white;
             display: flex;
             flex-direction: column;
@@ -95,8 +94,6 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 30px;
-            /* background: rgba(255, 255, 255, 0.1); */
-            /* border-radius: 50%; */
             padding: 20px;
             z-index: 1;
         }
@@ -219,22 +216,8 @@
             color: #3a7bd5;
         }
         
-        .password-toggle {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #3a7bd5;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        
-        .password-toggle:hover {
-            color: #3a7bd5;
-        }
-        
         button {
-             background: linear-gradient(135deg, #0a2e6f 0%, #1a56db 100%);
+            background: linear-gradient(135deg, #0a2e6f 0%, #1a56db 100%);
             color: white;
             border: none;
             padding: 16px;
@@ -283,12 +266,12 @@
             margin-left: 20px;
         }
         
-        .forgot-password {
-            text-align: right;
-            margin-top: 15px;
+        .back-to-login {
+            text-align: center;
+            margin-top: 25px;
         }
         
-        .forgot-password a {
+        .back-to-login a {
             color: #6051cf;
             text-decoration: none;
             font-size: 14px;
@@ -296,7 +279,7 @@
             transition: color 0.3s;
         }
         
-        .forgot-password a:hover {
+        .back-to-login a:hover {
             color: #4a3cb0;
             text-decoration: underline;
         }
@@ -305,8 +288,25 @@
             min-height: 150px;
         }
         
+        .instructions {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            color: #0369a1;
+            font-size: 14px;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
         @media (max-width: 950px) {
-            .login-container {
+            .forgot-container {
                 flex-direction: column;
                 height: auto;
             }
@@ -345,53 +345,55 @@
             animation: fadeInUp 0.5s ease-out forwards;
         }
         
-        .input-group:nth-child(1) { animation-delay: 0.1s; }
-        .input-group:nth-child(2) { animation-delay: 0.2s; }
-        button { animation-delay: 0.3s; }
+        .input-group { animation-delay: 0.1s; }
+        button { animation-delay: 0.2s; }
     </style>
 </head>
 <body>
-    {{-- <div class="bg-shape-1"></div> --}}
+    <div class="bg-shape-1"></div>
     <div class="bg-shape-2"></div>
     
-    <div class="login-container">
+    <div class="forgot-container">
         <div class="brand-section">
             <div class="brand-logo">
-            <img src="{{ asset('images/Zorovel Logo - Zorovel White Logo - Edited.png') }}" alt="Zoroval Logo">
+                <img src="{{ asset('images/Zorovel Logo - Zorovel White Logo - Edited.png') }}" alt="Zoroval Logo">
             </div>
-            <h1>Welcome Back!</h1>
-            <p>Manage your shifts with ease, anytime, anywhere.</p>
+            <h1>Reset Your Password</h1>
+            <p>We'll send you a link to reset your password</p>
             
-            {{-- <div class="features">
-            <div class="feature">
-                <i class="fas fa-check-circle"></i>
-                <span>Easy shift management</span>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Secure password reset process</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Link expires after 24 hours</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Check your spam folder if needed</span>
+                </div>
             </div>
-            <div class="feature">
-                <i class="fas fa-check-circle"></i>
-                <span>Real-time notifications</span>
-            </div>
-            <div class="feature">
-                <i class="fas fa-check-circle"></i>
-                <span>Secure crew portal</span>
-            </div>
-            </div> --}}
-            <span style="display:block; margin-top:220px;">
-            <a href="http://endevodigital.com/" style="text-decoration:none; color:white;">Powered by Endevo Digital</a>
+            <span style="display:block; margin-top:100px;">
+                <a href="http://endevodigital.com/" style="text-decoration:none; color:white;">Powered by Endevo Digital</a>
             </span>
         </div>
         
         <div class="form-section">
             <div class="form-header">
-                <h2>Sign In</h2>
-                <p>Enter your credentials to access your account</p>
+                <h2>Forgot Password</h2>
+                <p>Enter your email to receive a reset link</p>
             </div>
             
             <div class="message-container">
                 <!-- Success message -->
-                @if(session('success'))
+                @if (session('status'))
                     <div class="alert alert-success visible">
-                        <i class="fas fa-check-circle"></i> {{ session('success') }}
+                        <i class="fas fa-check-circle"></i> 
+                        <div>
+                            <strong>Success!</strong> {{ session('status') }}
+                        </div>
                     </div>
                 @endif
 
@@ -411,7 +413,12 @@
                 @endif
             </div>
             
-            <form action="{{ route('login.post') }}" method="POST">
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> Instructions</h3>
+                <p>Enter the email address associated with your account and we'll send you a link to reset your password.</p>
+            </div>
+            
+            <form action="{{ route('password.email') }}" method="POST">
                 @csrf
                 <div class="input-group">
                     <label for="email">Email Address</label>
@@ -421,39 +428,13 @@
                     </div>
                 </div>
                 
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <div class="input-container">
-                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                        <i class="fas fa-lock"></i>
-                        <span class="password-toggle" id="togglePassword">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                    </div>
-                </div>
+                <button type="submit">Send Password Reset Link</button>
                 
-              <div class="forgot-password">
-    <a href="{{ route('password.request') }}">Forgot Password?</a>
-</div>
-                <button type="submit">Sign In</button>
+                <div class="back-to-login">
+                    <a href="{{ route('login') }}">Back to Login</a>
+                </div>
             </form>
         </div>
     </div>
-
-    <script>
-        // Password toggle functionality
-        document.addEventListener('DOMContentLoaded', function () {
-            const passwordInput = document.getElementById('password');
-            const togglePassword = document.getElementById('togglePassword');
-            const toggleIcon = togglePassword.querySelector('i');
-
-            togglePassword.addEventListener('click', function () {
-                const type = passwordInput.type === 'password' ? 'text' : 'password';
-                passwordInput.type = type;
-                toggleIcon.classList.toggle('fa-eye');
-                toggleIcon.classList.toggle('fa-eye-slash');
-            });
-        });
-    </script>
 </body>
 </html>

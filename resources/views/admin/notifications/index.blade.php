@@ -13,7 +13,7 @@
                 <th>Title</th>
                 <th>Message</th>
                 <th>Status</th>
-                {{-- <th>Acknowledged</th> --}}
+                <th>Decline Reason</th>
                 {{-- <th>Actions</th> --}}
             </tr>
         </thead>
@@ -36,6 +36,7 @@
                         <span class="badge bg-secondary">Unread</span>
                         @endif
                     </td>
+                    <td data-label="Decline Reason">{{ $notification->decline_reason ?? 'The Shift Accepted' }}</td>
                     {{-- <td data-label="Acknowledged">
                         @if($notification->acknowledged)
                             <span class="badge bg-success">Yes</span>
