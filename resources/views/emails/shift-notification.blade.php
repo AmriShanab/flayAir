@@ -85,7 +85,7 @@
             gap: 10px;
         }
         
-        .greeting i {
+        .greeting svg {
             color: #0a2e6f;
             font-size: 26px;
         }
@@ -118,7 +118,7 @@
             gap: 10px;
         }
         
-        .shift-details h2 i {
+        .shift-details h2 svf {
             color: #0a2e6f;
         }
         
@@ -363,7 +363,13 @@
         <div class="email-content">
             <!-- Greeting -->
             <div class="greeting">
-                <i class="fas fa-user-circle"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" fill="#0a2e6f" viewBox="0 0 512 512">
+  <path d="M256 8C119 8 8 119 8 256s111 248 248 248 
+  248-111 248-248S393 8 256 8zm0 96a88 88 0 1 1 0 176 88 88 0 1 1 0-176zm0 
+  392c-59.6 0-111.9-27.1-146.2-69.3 8.4-44.7 89.1-69.3 146.2-69.3 
+  57.1 0 137.8 24.6 146.2 69.3C367.9 468.9 315.6 496 256 496z"/>
+</svg>
+
                 Hi {{ $shift->worker->first_name }},
             </div>
             
@@ -375,14 +381,26 @@
             <!-- Shift Details -->
             <div class="shift-details">
                 <h2>
-                    <i class="fas fa-calendar-alt"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" fill="#0a2e6f" viewBox="0 0 448 512">
+  <path d="M152 64c0-8.8-7.2-16-16-16H96c-8.8 
+  0-16 7.2-16 16v48H48C21.5 112 0 133.5 0 
+  160v304c0 26.5 21.5 48 48 48h352c26.5 
+  0 48-21.5 48-48V160c0-26.5-21.5-48-48-48h-32V64c0-8.8-7.2-16-16-16h-40c-8.8 
+  0-16 7.2-16 16v48H168V64zm248 400H48V208h352v256z"/>
+</svg>
+
                     Shift Details
                 </h2>
                 
                 <div class="details-grid">
                     <div class="detail-item">
                         <div class="detail-icon">
-                            <i class="fas fa-play-circle"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" fill="#0a2e6f" viewBox="0 0 512 512">
+  <path d="M256 8C119 8 8 119 8 256s111 248 248 
+  248 248-111 248-248S393 8 256 8zm-48 
+  136l176 112-176 112V144z"/>
+</svg>
+
                         </div>
                         <div class="detail-content">
                             <div class="detail-label">START TIME</div>
@@ -392,7 +410,14 @@
                     
                     <div class="detail-item">
                         <div class="detail-icon">
-                            <i class="fas fa-stop-circle"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" fill="#0a2e6f" viewBox="0 0 512 512">
+  <path d="M256 8C119 8 8 119 8 256s111 248 248 
+  248 248-111 248-248S393 8 256 8zm96 
+  328c0 8.8-7.2 16-16 16H176c-8.8 
+  0-16-7.2-16-16V176c0-8.8 7.2-16 
+  16-16h160c8.8 0 16 7.2 16 16v160z"/>
+</svg>
+
                         </div>
                         <div class="detail-content">
                             <div class="detail-label">END TIME</div>
@@ -403,7 +428,15 @@
                     @if($shift->flight)
                     <div class="flight-info">
                         <div class="flight-header">
-                            <i class="fas fa-plane"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" fill="#0a2e6f" viewBox="0 0 512 512">
+  <path d="M482.3 192.6C505.1 204.4 505.1 239.6 
+  482.3 251.4L352 320V447.9c0 7.2-3.9 
+  13.8-10.2 17.3L288 480V352L154.8 
+  424.7l-39.6-23.3 56.4-113.5-56.4-113.5 
+  39.6-23.3L288 160V32l53.8 14.7C348.1 
+  50.2 352 56.8 352 64V192l130.3 68.6z"/>
+</svg>
+
                             <h3>Flight Information</h3>
                         </div>
                         <div class="flight-details">
@@ -412,7 +445,14 @@
                                 <div class="flight-airport">Origin</div>
                             </div>
                             <div class="flight-arrow">
-                                <i class="fas fa-long-arrow-alt-right"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" fill="#0a2e6f" viewBox="0 0 448 512">
+  <path d="M313.9 216H12c-6.6 0-12 5.4-12 
+  12v56c0 6.6 5.4 12 12 12h301.9v46.1c0 
+  21.4 25.9 32 41 17l86.1-86.1c9.4-9.4 
+  9.4-24.6 0-33.9l-86.1-86.1c-15.1-15.1-41 
+  -4.4-41 17V216z"/>
+</svg>
+
                             </div>
                             <div class="flight-destination">
                                 <div class="flight-code">{{ $shift->flight->destination ?? 'N/A' }}</div>
@@ -431,7 +471,21 @@
             <!-- Action Buttons -->
             <div class="action-buttons">
                 <a href="https://lightblue-guanaco-383578.hostingersite.com/shifts" class="btn btn-primary mx-3" style="text-decoration: none; color: white;">
-                    <i class="fas fa-calendar-check"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" fill="#ffffff" viewBox="0 0 448 512">
+  <path d="M400 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8 
+  0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8 
+  0-16 7.2-16 16v48H48C21.5 64 0 85.5 0 
+  112v352c0 26.5 21.5 48 48 
+  48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5
+  -48-48-48zm-55.6 167.6l-123.4 
+  123.4c-6.2 6.2-16.4 6.2-22.6 
+  0l-67.9-67.9c-6.2-6.2-6.2-16.4 
+  0-22.6l22.6-22.6c6.2-6.2 16.4-6.2 
+  22.6 0l44 44 100.7-100.7c6.2-6.2 
+  16.4-6.2 22.6 0l22.6 22.6c6.2 6.3 6.2 
+  16.4 0 22.8z"/>
+</svg>
+
                     View Schedule
                 </a>
                 <a href="#" class="btn btn-outline">
