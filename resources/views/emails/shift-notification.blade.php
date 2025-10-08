@@ -354,7 +354,7 @@
     <div class="email-container">
         <!-- Email Header -->
         <div class="email-header">
-            <img src="{{ asset('images/Zorovel Logo - Zorovel White Logo - Edited.png') }}" alt="Zoroval Logo" class="logo">
+            <img src="{{ asset('images/logo_white_version-removebg-preview.png') }}" alt="Zoroval Logo" class="logo">
             <h1>Shift Notification</h1>
             <p>Your schedule has been updated</p>
         </div>
